@@ -331,7 +331,7 @@ The following environment or state parameters can be made symbolic in this relea
 - `caller (msg.sender)`
 - `memory`
 
-Crucially, other environment variables such as `block.timestamp`, `tx.origin` or `callvalue` are left concrete for now, but will be abstracted in future releases.
+Crucially, other environment variables such as `block.timestamp`, `tx.origin` or `blockheight` are left concrete for now, but will be abstracted in future releases.
 
 In this release, memory is modeled as a (concrete) list of symbolic values, which means that while you can read and write symbolic values to _concrete memory locations_, you cannot write or read from _symbolic locations_. Most of the time, when dealing with smart contracts written in Solidity using statically sized arguments, this is what is happening anyway. But if you are using `hevm symbolic` on some code which involves dynamically sized arguments, you might find that execution ends with an error `unexpected symbolic argument`. This is not a fundamental restriction to symbolic execution using `hevm`, but simply a decision to not include for this release, in order to reduce scope and retain good performance.
 
