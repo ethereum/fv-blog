@@ -4,17 +4,17 @@
 # baseurl is the website's URL without the hostname
 
 # If you are building a simple GitHub user page (http://username.github.io) then use these settings:
-url: "https://solidity.ethereum.org"
+url: "https://fv.ethereum.org"
 baseurl: ""
 
 # If you are building a GitHub project page then use these settings:
-#url: "https://solidity.ethereum.org"
+#url: "https://fv.ethereum.org"
 #baseurl: ""
 
 # Of course don't forget to change the username and projectname to YOUR username and project
 
 # Name of website
-title: "Solidity Blog"
+title: "Formal Verification Blog"
 
 # Short description of your site
 description:
@@ -23,8 +23,8 @@ description:
 
 # List of links in the navigation bar
 navbar-links:
-  Releases: "https://github.com/ethereum/solidity/releases"
-  Documentation: "https://solidity.readthedocs.io/"
+  # Releases: "https://github.com/ethereum/solidity/releases"
+  # Documentation: "https://solidity.readthedocs.io/"
   # Ethereum Research Forum: "https://ethresear.ch/"
 
 # Image to show in the navigation bar - image must be a square (width = height)
@@ -61,7 +61,7 @@ footer-link-col: "#404040"
 # Change all these values or delete the ones you don't want.
 # Important: you must keep the "name" parameter, everything else you can remove
 author:
-  name: Solidity Team
+  name: Formal Verification Team
 
 # Select your active Social Network Links.
 # Uncomment the links you want to show in the footer and add your information to each link.
@@ -69,11 +69,11 @@ author:
 # If you want to add a new link that isn't here, you'll need to also edit the file _data/SocialNetworks.yml
 social-network-links:
   rss: true
-  email: "solidity@ethereum.org"
+  # email: "solidity@ethereum.org"
   # facebook: ethereumproject
-  github: ethereum/solidity
-  gitter: ethereum/solidity
-  twitter: solidity_lang
+  # github: ethereum/solidity
+  gitter: ethereum/formal-methods
+#  twitter: solidity_lang
 #  reddit: yourname
 #  google-plus: +DeanAttali
 #  linkedin: ethereum
@@ -97,7 +97,7 @@ share-links-active:
 
 # How to display the link to the website in the footer
 # Remove this if you don't want a link in the footer
-url-pretty: "solidity.ethereum.org"  # eg. "deanattali.com/beautiful-jekyll"
+url-pretty: "fv.ethereum.org"  # eg. "deanattali.com/beautiful-jekyll"
 
 # --- Web Statistics Section --- #
 

@@ -1,6 +1,10 @@
+# Formal verifcation blog
+
+This repo is adapted from [the solidity blog](https://github.com/ethereum/solidity-blog/) which in turn inherits from [the EF blog](https://github.com/ethereum/blog/).
+
 ## Welcome to GitHub Pages
 
-You can use the [editor on GitHub](https://github.com/ethereum/solidity-blog/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+You can use the [editor on GitHub](https://github.com/ethereum/fv-blog/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
 Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
 
@@ -30,7 +34,7 @@ For more details see [GitHub Flavored Markdown](https://guides.github.com/featur
 
 ### Jekyll Themes
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ethereum/solidity-blog/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ethereum/fv-blog/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
 
 ### Support or Contact
 
