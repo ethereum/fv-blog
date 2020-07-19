@@ -1,4 +1,5 @@
 # Formal verifcation blog
+Hello!
 
 This repo is adapted from [the solidity blog](https://github.com/ethereum/solidity-blog/) which in turn inherits from [the EF blog](https://github.com/ethereum/blog/).
 
