@@ -8,13 +8,12 @@ In this tutorial we will show how to use the new capabilities of `hevm`, and dis
 
 Hevm is an EVM interpreter originally written with testing and debugging in mind.
 It serves as the execution engine for such tools the `dapp` smart contract development framework and the `echidna` smart contract fuzzer.
-This release marks its first venture into the realm of symbolic execution, developed with performance, practicality and configurability in mind.
+This release marks its first venture into the realm of symbolic execution, developed with composability, practicality and configurability in mind.
 
-With this release, smart contract developers can also find assertion violations in their smart contract or interactively step through 
-the possible execution paths of their smart contracts to explore its full range of behaviours.
+Using `hevm symbolic`, smart contract developers can also find assertion violations in their smart contract or interactively step through the possible execution paths of their smart contracts to explore its full range of behaviours.
 
 ---
-asciinema video goes here
+[![asciicast](https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.svg)](https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C)
 ---
 
 The first release of Hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
