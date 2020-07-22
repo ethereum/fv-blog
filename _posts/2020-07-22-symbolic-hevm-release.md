@@ -53,7 +53,7 @@ Still, we hope that its supported set of features will serve as a helpful tool i
 
 ### Symbolic Execution and Formal Verification
 
-This release is the first step towards making `hevm` capable of formally verifiying smart contracts. `hevm` can be used to check smart contracts for `assert` statements, returning a counterexample for assertion violations. But proving the absense of assertion violations is only a small subset of the types of assurances that can be given with formal verification.
+This release is the first step towards making `hevm` capable of formally verifying smart contracts. `hevm` can be used to check smart contracts for `assert` statements, returning a counterexample for assertion violations. But proving the absence of assertion violations is only a small subset of the types of assurances that can be given with formal verification.
 
 More involved claims are more easily specified with the smart contract specification language `act`, which we will be explaining more in a future blog post.
 
@@ -65,7 +65,7 @@ SMT queries are resolved by either z3 (default) or cvc4 (flag `--solver cvc4`), 
 
 If you are curious about the implementation details, you can check out the [high level summary in the PR](https://github.com/dapphub/dapptools/pull/353).
 
-In the following section, we will go over a few examples of how to use the new symblic execution features of hevm. 
+In the following section, we will go over a few examples of how to use the new symbolic execution features of hevm. 
 To be able to follow along, make sure that you have `hevm` installed. `hevm` is a part of [dapptools](https://github.com/dapphub/dapptools), a suite of command line oriented tools which uses the purely functional package manager [`nix`](https://nixos.org) for installation. First install nix:
 
 ```bash
@@ -88,7 +88,7 @@ contract PrimalityCheck {
     }
 }
 ```
-We can use `hevm symbolic` to see whether there exists a pair of uints `x` and `y` such that their product is `973013`. We can specify a function abi using the `--sig` flag to let calldata be assumed to be a wellformed call to `factor`:
+We can use `hevm symbolic` to see whether there exists a pair of uints `x` and `y` such that their product is `973013`. We can specify a function abi using the `--sig` flag to let calldata be assumed to be a well formed call to `factor`:
 ```bash
 $ solc --bin-runtime -o . primality.sol
 $ hevm symbolic --code $(<PrimalityCheck.bin-runtime) --sig "factor(uint x, uint y)"
@@ -230,7 +230,7 @@ Callvalue:
 Stopped
 ```
 
-If we look up this signatures in [4byte.directory](https://www.4byte.directory/), we find that `0xf3fef3a3` is the signature for the function `withdraw(address,uint256)`. Among the other execution paths we also find `register(string,address)` (branches 42-49) and `userCount()` (branches 51 and 52), `deposit(address,uint256)` (branches 19-21). This can give us some idea about what the contract is about, unless these names are purposefully misleading. Stepping the contract through the debugger can lead to further insight. In the future, this infrastructure could be extended to give rise to a fully fletched decompiler of EVM code.
+If we look up this signatures in [4byte.directory](https://www.4byte.directory/), we find that `0xf3fef3a3` is the signature for the function `withdraw(address,uint256)`. Among the other execution paths we also find `register(string,address)` (branches 42-49) and `userCount()` (branches 51 and 52), `deposit(address,uint256)` (branches 19-21). This can give us some idea about what the contract is about, unless these names are purposefully misleading. Stepping the contract through the debugger can lead to further insight. In the future, this infrastructure could be extended to give rise to a fully fledged decompiler of EVM code.
 
 ### Equivalence checking
 
@@ -276,7 +276,7 @@ No discrepancies found.
 
 Note that for this simple example, the solidity compiler is actually smart enough to perform this optimization for us. If we simply pass `--optimize --optimizer-runs=9999` to original `solc` invocation, we will indeed end up with bytecode where the `y` read is cached. And if we are uncertain about the solidity optimizer, we can double check its output using `hevm equivalence`, comparing the unoptimized and optimized versions!
 
-Let's look at another example, adapted from a [bug report](https://github.com/ethereum/solidity/issues/8072) which demonstrates an error in the yul optimizer introduced in `solc` `0.6.0` (and promtly fixed in `0.6.1`). In our version, the optimizer bug is only visible when the following yul code is called with the magic number `0xdeadbeef`.
+Let's look at another example, adapted from a [bug report](https://github.com/ethereum/solidity/issues/8072) which demonstrates an error in the yul optimizer introduced in `solc` `0.6.0` (and promptly fixed in `0.6.1`). In our version, the optimizer bug is only visible when the following yul code is called with the magic number `0xdeadbeef`.
 
 ```solidity
 object "Runtime" {
@@ -336,7 +336,7 @@ Callvalue:
 0
 ```
 
-Although this example may appear quite artifical, it demonstrates an important point. Since the two programs only differ on the input `0xdeadbeef`, it is very unlikely for a bug like this to be detected through manual testing, or even by comparing them against randomly generated inputs. But using symbolic execution we can find the discrepancy very quickly.
+Although this example may appear quite artificial, it demonstrates an important point. Since the two programs only differ on the input `0xdeadbeef`, it is very unlikely for a bug like this to be detected through manual testing, or even by comparing them against randomly generated inputs. But using symbolic execution we can find the discrepancy very quickly.
 
 
 ## Limitations
