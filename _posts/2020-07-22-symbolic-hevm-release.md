@@ -7,7 +7,7 @@ author: Martin Lundfall
 category: 'Research & Development'
 ---
 
-The latest release of [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) introduces symbolic execution features which can be used for checking smart contracts for correctness, step through the execution space of live contracts, or prove equivalence between them.
+The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.40.0)  of [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) introduces symbolic execution features which can be used for checking smart contracts for correctness, step through the execution space of live contracts, or prove equivalence between them.
 
 In this tutorial we will show how to use the new capabilities of `hevm`, and discuss some of its unique features as a symbolic execution engine.
 
