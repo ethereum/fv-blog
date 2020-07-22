@@ -37,6 +37,7 @@ Still, we hope that its supported set of features will serve as a helpful tool i
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 **Table of Contents**
+
   - [Symbolic Execution and Formal Verification](#symbolic-execution-and-formal-verification)
   - [How does it work?](#how-does-it-work)
 - [Using `hevm symbolic`](#using-hevm-symbolic)
@@ -45,6 +46,7 @@ Still, we hope that its supported set of features will serve as a helpful tool i
   - [Equivalence checking](#equivalence-checking)
 - [Limitations](#limitations)
 - [Future work](#future-work)
+- [Adieu!](#adieu)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
