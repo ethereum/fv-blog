@@ -129,7 +129,7 @@ We find ourselves in an interactive environment just like the one shown in the s
 
 ![hevm keys](../img/2020/07/hevmkeys.png?raw=true "")
 
-Whenever we reach a branching point (`JUMPI` opcode) with a symbolic argument, `hevm` will make an smt query to see which branches are possible. If both branches are satisfiable, we can choose the branch we are interested in by pressing `0` or `1`.
+Whenever we reach a branching point (`JUMPI` opcode) with a symbolic argument, `hevm` will make an SMT query to see which branches are possible. If both branches are satisfiable, we can choose the branch we are interested in by pressing `0` or `1`.
 
 ### Executing against live contracts
 
@@ -153,7 +153,7 @@ hevm symbolic --rpc https://mainnet.infura.io/v3/$INFURA_API_KEY --address 0x06a
 ```
 
 When dealing with executions over rpc fetched state, `hevm` offers a different ways of handling storage reads:
-The default option models contract storage as an smt array and simply returns an unconstrained symbolic value for `SREAD`s. It is possible to read and write to symbolic storage locations.
+The default option models contract storage as an SMT array and simply returns an unconstrained symbolic value for `SREAD`s. It is possible to read and write to symbolic storage locations.
 If passed `--storage-model InitialS`, you can still `SREAD` and `SSTORE` values at symbolic locations, but the default value is `0`. This model is used automatically if the `--create` flag is passed.
 Finally, using `--storage-model ConcreteS`, storage will be fetched on demand from a remote node via RPC. As a result, you cannot read from symbolic storage locations.
 
