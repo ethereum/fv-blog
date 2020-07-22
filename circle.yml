@@ -15,6 +15,9 @@ jobs:
             - rubygems-v1-{{ checksum "Gemfile.lock" }}
             - rubygems-v1-fallback
       - run:
+          name: Asciinema gem install
+          command: gem install jekyll-asciinema
+      - run:
           name: Bundle gem install
           command: gem install bundler:2.1.4
       - run:
