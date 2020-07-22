@@ -27,6 +27,7 @@ Using `hevm symbolic`, smart contract developers can also find assertion violati
         data-rows=20
         data-theme=monokai
         id="asciicast-8v6bDlhqAPldooAfMRdoIZb4C" async>
+
 </script>
 
 The first release of hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
