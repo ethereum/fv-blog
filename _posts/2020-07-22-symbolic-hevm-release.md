@@ -19,7 +19,7 @@ This release marks its first venture into the realm of symbolic execution, devel
 
 Using `hevm symbolic`, smart contract developers can also find assertion violations in their smart contract or interactively step through the possible execution paths of their smart contracts to explore its full range of behaviours.
 
-{% asciicast 8v6bDlhqAPldooAfMRdoIZb4C %}
+{% include asciinema.html %}
 
 The first release of hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
 Still, we hope that its supported set of features will serve as a helpful tool in developing and analysing real world smart contracts. This release introduces the following features:
@@ -369,7 +369,7 @@ Besides addressing the obvious limitations discussed above, there are several di
 Our immediate goal is to make hevm available as a proving back end to [act](https://github.com/ethereum/act). Besides the obvious benefit of being able to use `hevm` as a fast proving engine for formally verifying smart contracts, it would also make it easier to compare the behaviour of `hevm` against the more mature [KEVM](https://github.com/kframework/evm-semantics/), and increase the confidence in `hevm` as a proving tool.
 
 Another future direction would be in improving the interactive debugger. There are multiple ways to increase the usability and insight given when stepping through a contract symbolically. 
-One improvement would be to add an `overview` display, which would show the user the tree of possible execution paths, similar to the one seen in [klab](https://github.com/dapphub/klab):
+One improvement would be to add an `overview` display, which would show the user the tree of possible execution paths and their branching conditions similar to the one seen in [klab](https://github.com/dapphub/klab):
 
 ![klab overview](../img/2020/07/klaboverview.png?raw=true "")
 
