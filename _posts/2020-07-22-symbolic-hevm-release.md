@@ -349,6 +349,8 @@ In this release, memory is modeled as a (concrete) list of symbolic values, whic
 
 A similar restriction is placed on `CALL`s. The target of all `CALL`s must be concrete addresses in order to continue with the symbolic execution. If you are using `hevm symbolic` against live state, you will sometimes find it valuable to use `ConcreteS` as a storage model in order to be able ensure you don't end up calling a symbolic address.
 
+Currently, it is not possible to use symbolic storage for multiple contracts. The storage model for any contract called by the starting contract will always be `ConcreteS`.
+
 A classic problem one quickly runs into when doing symbolic execution is loops. If the loop condition depends on a symbolic argument, then naïvely exploring the possible execution paths will in the worst case not only result in an infinite regress, but infinitely regressing on an unbounded number of branches. Although there are ways of getting around this problem, such as trying to infer loop invariants (as is done by [Solidity's SMT checker](https://www.aon.com/cyber-solutions/aon_cyber_labs/exploring-soliditys-model-checker/) <!-- or some other link? -->), they are not included in this initial release. Instead, the number of times a particular piece of code can be revisited is bounded by the flag `--max-iterations`. This simple "bounded model checking" approach allows the execution engine to partially explore loops, but leaves it incapable of fully exploring the possibilities of certain loops.
 
 Another limitation in this release is encoding of dynamic calldata arguments. By default, `hevm symbolic` instantiates calldata to a symbolic byte buffer with a length of at most 1024, but can be specialized to conform to a particular function signature using the `--sig` flag. However, using this method only statically sized arguments can be given. This means that you won't be able to specialize calldata to match the function signature of `foo(bytes a)` for example.
@@ -357,11 +359,22 @@ You should not expect to be able to do much with precompiles with this release. 
 
 ## Future work
 
-Use act as a proving front end.
-More abstracted fields
-Symbolic storage for multiple contracts
-Path view
-AST in the debug (may lead to decompiler)
-Trusted rewrites (and coinduction)
-DSTest integration
-Gas reads
+Besides addressing the obvious limitations discussed above, there are several directions future development can go from here. 
+
+Our immediate goal is to make hevm available as a proving back end to [act](https://github.com/ethereum/act). Besides the obvious benefit of being able to use `hevm` as a fast proving engine for formally verifying smart contracts, it would also make it easier to compare the behaviour of `hevm` against the more mature [KEVM](https://github.com/kframework/evm-semantics/), and increase the confidence in `hevm` as a proving tool.
+
+Another future direction would be in improving the interactive debugger. There are multiple ways to increase the usability and insight given when stepping through a contract symbolically. 
+One improvement would be to add an `overview` display, which would show the user the tree of possible execution paths, similar to the one seen in [klab](https://github.com/dapphub/klab):
+
+![klab overview](../img/2020/07/klaboverview.png?raw=true "")
+
+A richer display of symbolic terms would also be valuable. Currently, all symbolic values are presented plainly as `<symbolic>`, but if we keep track of variable names and the operations applied to them we could display a syntax tree instead, as in `balanceOf[msg.sender] - value`. This way of tracking expressions would also bring the possibility of a general `hevm` decompiler closer to reality. Much of the infrastructure for pretty printing symbolic expressions is already in place, it has simply been decided to be out of scope of this initial release.
+
+Another interesting prospect would be to integrate symbolic execution into the pipeline of [`dapp test`](https://dapp.tools/dapp/#test). Currently, `dapp test` allows you to write unit tests and property based tests for smart contracts in Solidity. For an example of such tests, you can check out the ones written for the [eth2 deposit contract](https://github.com/axic/eth2-deposit-contract/blob/master/tests/deposit_contract.t.sol). 
+Adding the ability for symbolic execution in `dapp test` would allow developers to specify and prove claims about their smart contracts without ever leaving the comfort of the Solidity language.
+
+As discussed in [limitations](#limitations), `hevm symbolic` is currently poorly equipped to deal with unbounded loops. To combat this one would need to implemented the ability to interveave EVM execution with custom trusted functions that update the EVM state, what we could call "trusted rewrites". Along with specified loop invariants, trusted rewrites would allow `hevm` to reason about unbounded loops without in a sound manner. Trusted rewrites could also allow the reuse parts of a symbolic execution, effectively opening up new ways to scale the formal verification process as a whole.
+
+## Adieu!
+
+We hope this tutorial has given you a taste of symbolic execution with hevm, and some insight into the process of formal verification as a whole. For more information about `hevm`, check out the [README](https://github.com/dapphub/dapptools/tree/master/src/hevm), and if you have any questions or would like to discuss features, please raise an issue at the [hevm repo](https://github.com/dapphub/dapptools) or come chat at [gitter](gitter.im/ethereum/formal-methods) or [dapphub.chat/](dapphub.chat/).
