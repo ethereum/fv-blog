@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: Symbolic execution for hevm
 date: '2020-07-22'
 author: Martin Lundfall
