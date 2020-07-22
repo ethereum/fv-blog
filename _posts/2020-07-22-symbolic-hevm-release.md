@@ -1,22 +1,35 @@
-# Symbolic execution for HEVM
+---
+layout: post
+published: false
+title: Symbolic execution for hevm
+date: '2020-07-22'
+author: Martin Lundfall
+category: 'Research & Development'
+---
 
-The latest release of `hevm` introduces symbolic execution features which can be used for checking smart contracts for correctness, step through the execution space of live contracts, or prove equivalence between them.
+The latest release of [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) introduces symbolic execution features which can be used for checking smart contracts for correctness, step through the execution space of live contracts, or prove equivalence between them.
 
 In this tutorial we will show how to use the new capabilities of `hevm`, and discuss some of its unique features as a symbolic execution engine.
 
 ### About hevm
 
-Hevm is an EVM interpreter originally written with testing and debugging in mind.
+`hevm` is an EVM interpreter originally written with testing and debugging in mind.
 It serves as the execution engine for such tools the `dapp` smart contract development framework and the `echidna` smart contract fuzzer.
 This release marks its first venture into the realm of symbolic execution, developed with composability, practicality and configurability in mind.
 
 Using `hevm symbolic`, smart contract developers can also find assertion violations in their smart contract or interactively step through the possible execution paths of their smart contracts to explore its full range of behaviours.
 
----
-[![asciicast](https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.svg)](https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C)
----
 
-The first release of Hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
+<script type="text/javascript"
+        src="https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.js"
+        data-autoplay=0
+        data-preload=1
+        data-rows=20
+        data-theme=monokai
+        id="asciicast-8v6bDlhqAPldooAfMRdoIZb4C" async>
+</script>
+
+The first release of hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
 Still, we hope that its supported set of features will serve as a helpful tool in developing and analysing real world smart contracts. This release introduces the following features:
 
 - Find assertion violations, division-by-zero errors, out of bounds array access, or other failures resulting in an invocation of the INVALID opcode.
