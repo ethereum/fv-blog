@@ -25,13 +25,9 @@ The first release of hevm with symbolic execution is experimental and [limited](
 Still, we hope that its supported set of features will serve as a helpful tool in developing and analysing real world smart contracts. This release introduces the following features:
 
 - Find assertion violations, division-by-zero errors, out of bounds array access, or other failures resulting in an invocation of the INVALID opcode.
-
 - Compare smart contracts for equivalence, searching for cases where the same input would lead to different outputs or storage updates.
-
 - Interactively explore the possible execution paths of a contract in a rich command line debugger.
-
 - Automatic test case generation
-
 - Analyze deployed contracts, using live state fetched on demand via rpc calls from a local or remote node.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
@@ -169,7 +165,7 @@ balanceOf[dst] = add(balanceOf[dst], pie);
 ```
 where we suddenly fail again with `VMFailure: UnexpectedSymbolicArg`, because we end up doing an `SLOAD` from a symbolic location, which is not possible with `--storage-model ConcreteS`. 
 
-With our current set up, it turns out we must use concrete arguments for `dst` and `msg.sender` in order to avoid reading from symbolic storage locations. We can instantiate these arguments to some concrete value, for example one of vitaliks addresses, `0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B`:
+With our current set up, it turns out we must use concrete arguments for `dst` and `msg.sender` in order to avoid reading from symbolic storage locations. We can instantiate these arguments to some concrete value, for example one of Vitalik's addresses, `0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B`:
 
 ```bash
 hevm symbolic --address 0x06af07097c9eeb7fd685c692751d5c66db49c215 --sig 'join(address,uint256)' --arg 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --caller 0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B --rpc https://mainnet.infura.io/v3/$INFURA_API_KEY --debug --json-file chaisrc.json --storage-model ConcreteS --smttimeout 5000
@@ -343,12 +339,12 @@ Although this example may appear quite artificial, it demonstrates an important 
 
 The following environment or state parameters can be made symbolic in this release:
 
-- `stack`
-- `calldata`
-- `callvalue`
-- `storage`
-- `caller (msg.sender)`
-- `memory`
+- stack
+- calldata
+- callvalue
+- storage
+- caller (msg.sender)
+- memory
 
 Crucially, other environment variables such as `block.timestamp`, `tx.origin` or `blockheight` are left concrete for now, but will be abstracted in future releases.
 
@@ -384,4 +380,4 @@ As discussed in [limitations](#limitations), `hevm symbolic` is currently poorly
 
 ## Adieu!
 
-We hope this tutorial has given you a taste of symbolic execution with hevm, and some insight into the process of formal verification as a whole. For more information about `hevm`, check out the [README](https://github.com/dapphub/dapptools/tree/master/src/hevm), and if you have any questions or would like to discuss features, please raise an issue at the [hevm repo](https://github.com/dapphub/dapptools) or come chat at [gitter](gitter.im/ethereum/formal-methods) or [dapphub.chat/](dapphub.chat/).
+We hope this tutorial has given you a taste of symbolic execution with hevm, and some insight into the process of formal verification as a whole. For more information about `hevm`, check out the [README](https://github.com/dapphub/dapptools/tree/master/src/hevm), and if you have any questions or would like to discuss features, please raise an issue at the [hevm repo](https://github.com/dapphub/dapptools) or come chat at [gitter](https://gitter.im/ethereum/formal-methods) or [dapphub.chat/](https://dapphub.chat/).
