@@ -19,16 +19,7 @@ This release marks its first venture into the realm of symbolic execution, devel
 
 Using `hevm symbolic`, smart contract developers can also find assertion violations in their smart contract or interactively step through the possible execution paths of their smart contracts to explore its full range of behaviours.
 
-
-<script type="text/javascript"
-        src="https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.js"
-        data-autoplay=0
-        data-preload=1
-        data-rows=20
-        data-theme=monokai
-        id="asciicast-8v6bDlhqAPldooAfMRdoIZb4C" async>
-
-</script>
+{% asciicast 8v6bDlhqAPldooAfMRdoIZb4C %}
 
 The first release of hevm with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
 Still, we hope that its supported set of features will serve as a helpful tool in developing and analysing real world smart contracts. This release introduces the following features:
