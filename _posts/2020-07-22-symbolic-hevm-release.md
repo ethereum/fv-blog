@@ -127,7 +127,7 @@ hevm symbolic --code $(cat combined.json | jq  '.contracts."token.sol:Token"."bi
 ```
 We find ourselves in an interactive environment just like the one shown in the screencast above, in which we can navigate step-by-step using the following key bindings:
 
-![hevm keys](../img/2020/07/hevmkeys.png?raw=true "")
+![hevm keys](../img/2020/07/hevmkeys.png?raw=true)
 
 Whenever we reach a branching point (`JUMPI` opcode) with a symbolic argument, `hevm` will make an SMT query to see which branches are possible. If both branches are satisfiable, we can choose the branch we are interested in by pressing `0` or `1`.
 
@@ -373,7 +373,7 @@ Our immediate goal is to make hevm available as a proving back end to [act](http
 Another future direction would be in improving the interactive debugger. There are multiple ways to increase the usability and insight given when stepping through a contract symbolically. 
 One improvement would be to add an `overview` display, which would show the user the tree of possible execution paths and their branching conditions similar to the one seen in [klab](https://github.com/dapphub/klab):
 
-![klab overview](../img/2020/07/klaboverview.png?raw=true "")
+![klab overview](../img/2020/07/klaboverview.png?raw=true)
 
 A richer display of symbolic terms would also be valuable. Currently, all symbolic values are presented plainly as `<symbolic>`, but if we keep track of variable names and the operations applied to them we could display a syntax tree instead, as in `balanceOf[msg.sender] - value`. This way of tracking expressions would also bring the possibility of a general `hevm` decompiler closer to reality. Much of the infrastructure for pretty printing symbolic expressions is already in place, it has simply been decided to be out of scope of this initial release.
 
