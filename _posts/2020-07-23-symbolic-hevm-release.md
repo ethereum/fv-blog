@@ -11,6 +11,7 @@ The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.
 
 In this tutorial we will show how to use the new capabilities of `hevm`, and discuss some of its unique features as a symbolic execution engine.
 
+---
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
@@ -38,7 +39,7 @@ This release marks its first venture into the realm of symbolic execution, devel
 
 Using `hevm symbolic`, smart contract developers can also find assertion violations in their smart contract or interactively step through the possible execution paths of their smart contracts to explore its full range of behaviours.
 
-<script id="asciicast-8v6bDlhqAPldooAfMRdoIZb4C" src="https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.js" async data-speed="1.5"></script>
+<script id="asciicast-8v6bDlhqAPldooAfMRdoIZb4C" src="https://asciinema.org/a/8v6bDlhqAPldooAfMRdoIZb4C.js" async data-speed="1.5" rows=42></script>
 
 The first release of `hevm` with symbolic execution is experimental and [limited](#limitations), and its proofs should not be relied upon as a formal verification engine for in production code.
 Still, we hope that its supported set of features will serve as a helpful tool in developing and analysing real world smart contracts. This release introduces the following features:
