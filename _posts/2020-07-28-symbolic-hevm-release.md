@@ -2,7 +2,7 @@
 layout: post
 published: true
 title: Symbolic execution for hevm
-date: '2020-07-23'
+date: '2020-07-28'
 author: Martin Lundfall
 category: 'Research & Development'
 ---
