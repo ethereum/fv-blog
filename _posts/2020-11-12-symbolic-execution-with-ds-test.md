@@ -389,7 +389,7 @@ A small demonstation video can be found below:
 
 ## Limitations, Assumptions & Future Work
 
-**Non Linearity (`safeMul`)**
+#### Non Linearity (`safeMul`)
 
 The symbolic execution engine in `hevm` is backed by an [SMT
 solver](https://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories) (currently either `z3` or
@@ -404,7 +404,7 @@ involve both a multiplication and a division by a symbolic variable).
 We hope to include optimizations in future releases of `hevm` that reduce the load on the solver
 when executing contracts that make use of common non-linearities (`safeMul` included).
 
-**Symbolic Representation of Dynamic Types**
+#### Symbolic Representation of Dynamic Types
 
 `hevm` is currently unable to represent dynamic types (e.g. `bytes`, `string`) symbolically. Tests
 that need symbolic representations of dynamic data will currently fail with an `Unsupported symbolic
@@ -412,7 +412,7 @@ abiencoding` error.
 
 We intend to lift this restriction in a future release of `hevm`.
 
-**Symbolic Constructor Arguments**
+#### Symbolic Constructor Arguments
 
 Contract bytecode is currently assumed by `hevm` to be completely concrete. As constructor arguments
 are implemented on the evm level by appending data to the contract's `creationCode`, symbolic
@@ -421,7 +421,7 @@ fail with an `UnexpectedSymbolicArg` error.
 
 We intend to lift this restriction in a future release of `hevm`.
 
-**State Explosion**
+#### State Explosion
 
 Symbolic execution explores all possible paths through a program. If the program is large, or
 contains many branches, this can become computationly very intensive. This issue is known as "state
@@ -431,7 +431,7 @@ aware that exploration of very large or complex contract systems may become very
 In these cases it be convenient to first write your tests as fuzz tests, and only begin symbolically
 executing once you have a set of properties that you are happy with.
 
-**Storage Collisions**
+#### Storage Collisions
 
 Solidity mapping and dynamically-sized array types use a Keccak-256 hash computation to find the
 starting position of the value or the array data
