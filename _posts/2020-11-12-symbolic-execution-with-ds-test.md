@@ -198,13 +198,8 @@ We can write a test that asserts our expected behaviour for the transfer functio
 
 ```solidity
 contract TestToken is DSTest, SafeMath {
-    Token token;
-    function setUp() public {
-        token = new Token(uint(-1));
-    }
-
     function prove_transfer(address dst, uint amt) public {
-        log_named_address("this", address(this));
+        Token token = new Token(uint(-1));
 
         uint preBalThis = token.balanceOf(address(this));
         uint preBalDst  = token.balanceOf(dst);
