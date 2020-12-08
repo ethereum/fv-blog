@@ -11,9 +11,7 @@ The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.
 [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) incorporates the recently
 introduced symbolic execution features into its unit testing framework.
 
-This lets users of the [`dapp`](https://github.com/dapphub/dapptools/tree/master/src/dapp) smart
-contract development framework prove properties about their contracts using the same syntax and
-language features that they use to write the contracts themselves.
+This lets smart contract developers formulate and prove properties in Solidity using the  [`dapp`](https://github.com/dapphub/dapptools/tree/master/src/dapp) development framework. Formally verifying properties should now be no harder than writing a property based test. In fact, it uses almost the exact same syntax! 
 
 In this tutorial we will show how to use these new features to prove properties of your smart
 contracts.
@@ -100,8 +98,8 @@ Each leaf on the tree represents a possible execution path, and has some logical
 attached:
 
 - `0`:  `msg.value > 0`: revert (`add` is not payable)
-- `10`: `msg.value == 0 && x + y < x`: revert (overflow)
-- `11`: `msg.value == 0 && x + y >= x`: return `x + y`
+- `1-0`: `msg.value == 0 && x + y < x`: revert (overflow)
+- `1-1`: `msg.value == 0 && x + y >= x`: return `x + y`
 
 If we assert a property at every leaf in the execution tree, then we can be sure that that property
 will hold for all possible values of each piece of symbolic state, allowing us to prove properties
@@ -110,7 +108,7 @@ that hold for *all possible inputs* to a given function.
 ## Using `ds-test`
 
 [`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is a solidity unit testing
-libary with tight integration into `hevm`. `hevm` will execute as a test any method that meets the
+library for `dapp`, which uses `hevm` for execution. `hevm` will execute as a test any method that meets the
 following criteria:
 
 1. The method is on a contract that inherits from `DSTest`
@@ -163,7 +161,7 @@ Finally, it is possible to manipulate the execution environment (e.g. timestamp)
 
 ## Finding Counterexamples
 
-Lets look at a more complex example, consider the following token contract:
+Let's look at a more complex example! Consider the following token contract:
 
 ```solidity
 pragma solidity ^0.6.12;
@@ -214,7 +212,7 @@ contract TestToken is DSTest, SafeMath {
 }
 ```
 
-Interestingly, this test fails with the following output:
+Interestingly, if we run this test with `dapp test -v`, it fails with the following output:
 
 ```
 Running 1 tests for src/Solidity.t.sol:TestERC20
@@ -429,4 +427,3 @@ aware that exploration of very large or complex contract systems may become very
 
 In these cases it may be convenient to first write your tests as fuzz tests, and only begin
 symbolically executing once you have a set of properties that you are happy with.
-
