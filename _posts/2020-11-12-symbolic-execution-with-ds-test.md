@@ -25,6 +25,14 @@ contracts.
 **Table of Contents**
 
 - [Installation](#installation)
+- [Example Code](#example-code)
+- [What Is Symbolic Execution?](#what-is-symbolic-execution)
+- [Using `ds-test`](#using-ds-test)
+- [Finding Counterexamples](#finding-counterexamples)
+- [Execution Environment And Limits to Proof](#execution-environment-and-limits-to-proof)
+- [Execution Against Mainnet State](#execution-against-mainnet-state)
+- [Interactive Exploration](#interactive-exploration)
+- [Limitations, Assumptions & Future Work](#limitations-assumptions--future-work)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
