@@ -321,20 +321,17 @@ token](https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#c
 
 ```solidity
 interface ERC20 {
-    function totalSupply() external view returns (uint256);
     function balanceOf(address account) external view returns (uint256);
     function transfer(address recipient, uint256 amount) external returns (bool);
-    function allowance(address owner, address spender) external view returns (uint256);
-    function approve(address spender, uint256 amount) external returns (bool);
-    function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
-    event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
 }
 
-contract TestToken is DSTest, SafeMath {
+contract TestBal is DSTest, SafeMath {
     function prove_transfer(address dst, uint amt) public {
         // BAL: https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#code
         ERC20 token = ERC20(0xba100000625a3754423978a60c9317c58a424e3D);
+
+        // ignore cases where we don't have engough tokens
+        if (amt > bal.balanceOf(address(this))) return;
 
         uint preBalThis = token.balanceOf(address(this));
         uint preBalDst  = token.balanceOf(dst);
@@ -344,29 +341,33 @@ contract TestToken is DSTest, SafeMath {
         // no change for self-transfer
         uint delta = dst == address(this) ? 0 : amt;
 
-        // balance of this has been reduced by `delta`
-        assertEq(sub(preBalThis, token.balanceOf(address(this))), delta);
+        // balance of `this` has been reduced by `delta`
+        assertEq(sub(preBalThis, delta), bal.balanceOf(address(this)));
 
-        // balance of dst has been increased by `delta`
-        assertEq(sub(token.balanceOf(dst), preBalDst), delta);
+        // balance of `dst` has been increased by `delta`
+        assertEq(add(preBalDst, delta), bal.balanceOf(dst);
     }
-
 }
 ```
 
-We can execute this test by running `dapp test --rpc-url <URL>`, and we see that a counter example
-is found: the balancer token reverts for transfers to the zero address.
+Lets run this test as the [balancer DAO](https://etherscan.io/token/0xba100000625a3754423978a60c9317c58a424e3d?a=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533) to make sure that we have plenty of `BAL`:
 
 ```
+$ DAPP_TEST_ADDRESS=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533 dapp test --rpc-url <URL>
 [FAIL] prove_transfer(address,uint256)
 
 Failure: prove_transfer(address,uint256)
 
   Counter Example:
 
-    result:   Revert
+    result:   Revert("ERC20: transfer to the zero address")
     calldata: prove_transfer(0x0000000000000000000000000000000000000000, 0)
 ```
+
+We have uncovered another edge case! The balancer token disallows transfers to the zero address.
+
+It is also worth noting that symbolic execution against rpc state can be significantly more
+performant than fuzzing via rpc.
 
 ## Interactive Exploration
 
