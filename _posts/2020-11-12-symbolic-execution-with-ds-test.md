@@ -55,11 +55,11 @@ curl https://dapp.tools/install | sh
 
 ## What Is Symbolic Execution?
 
-Symbolic execution is a program analysis technique that executes programs on symbolic inputs,
-representing many possible concrete inputs, and represents the program behavior using mathematical
-constraints over the symbolic inputs.
+Symbolic execution is a program analysis technique that keeps some of the program state in an
+abstract form, meaning that instead of being set to a specific value, these portions of the state
+are represented as a name with some constraints attached.
 
-To make this a little more concrete, consider the following contract:
+To make this more specific, consider the contract below:
 
 ```solidity
 contract Add {
@@ -69,7 +69,17 @@ contract Add {
 }
 ```
 
-We can represent the behaviour of the `add` method as a tree of possible executions:
+If we were to execute the `add` method symbolically we could represent the calldata as two symbolic
+variables (`x` and `y`) that are constrained so their value can only fit in the range of a
+`uint256`. As we proceed through the program, we will encounter various potential branching points,
+for example a `JUMPI` instruction. If both sides of the branching point are reachable (determined by
+checking if the conjunction of all existing constraints and the jump condition is satisfiable), then
+execution will split in two, and each branch will be explored seperately, with the jump condition
+(or it's negation depending on which branch is being explored) being added as a constraint for that
+particular branch.
+
+This results in a tree of possible executions, for example for the `add` method, the execution tree
+looks like this:
 
 ```
 ├ 0     msg.value > 0
@@ -91,9 +101,9 @@ attached:
 - `10`: `msg.value == 0 && x + y < x`: revert (overflow)
 - `11`: `msg.value == 0 && x + y >= x`: return `x + y`
 
-We can therefore use symbolic execution to exhaustively explore all possible execution paths for a
-given program. This means we can write tests that assert that properties hold for *all possible
-inputs* to a given function.
+If we assert a property at every leaf in the execution tree, then we can be sure that that property
+will hold for all possible values of each piece of symbolic state, allowing us to prove properties
+that hold for *all possible inputs* to a given function.
 
 ## Using `ds-test`
 
