@@ -428,19 +428,6 @@ contains many branches, this can become computationly very intensive. This issue
 explosion". While the relative simplicity of most smart contracts limits the impact, you should be
 aware that exploration of very large or complex contract systems may become very time consuming.
 
-In these cases it be convenient to first write your tests as fuzz tests, and only begin symbolically
-executing once you have a set of properties that you are happy with.
-
-#### Storage Collisions
-
-Solidity mapping and dynamically-sized array types use a Keccak-256 hash computation to find the
-starting position of the value or the array data
-([ref](https://docs.soliditylang.org/en/v0.7.5/internals/layout_in_storage.html#mappings-and-dynamic-arrays)).
-This scheme introduces a miniscule chance of storage overflow due to a hash collision.
-
-In order to simplify the analysis, and to avoid cluttering the output with issues that will almost
-certainly never occur, `hevm` assumes that the output of `keccak256` is always greater than 100,
-meaning that the starting position of an array, or an element in a mapping will never collide with
-any of the first 100 storage slots.
-
+In these cases it may be convenient to first write your tests as fuzz tests, and only begin
+symbolically executing once you have a set of properties that you are happy with.
 
