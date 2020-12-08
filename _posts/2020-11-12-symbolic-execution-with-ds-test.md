@@ -53,6 +53,8 @@ curl -L https://nixos.org/nix/install | sh
 curl https://dapp.tools/install | sh
 ```
 
+All the examples from this blog post are available [here](https://github.com/xwvvvvwx/ds-test-blog-examples).
+
 ## What Is Symbolic Execution?
 
 Symbolic execution is a program analysis technique that keeps some of the program state in an
@@ -128,9 +130,6 @@ Three types of test are recognised by `hevm`:
 To illustrate the differences between the test types, consider the following example:
 
 ```solidity
-pragma solidity ^0.6.12;
-import {DSTest} from "ds-test/test.sol";
-
 contract Test is DSTest {
     function test_associativity() public {
         assertEq(
