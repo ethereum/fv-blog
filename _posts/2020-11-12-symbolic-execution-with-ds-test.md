@@ -372,9 +372,20 @@ performant than fuzzing via rpc.
 ## Interactive Exploration
 
 `hevm` also includes a visual debugger, and we can use this to interactively explore the execution
-tree:
+tree. You can enter the debugger by running `dapp debug` from the root of your `dapp project`. You
+will see a list of test methods, and once you select one you will be dropped into an interactive
+debugging session.
 
-<INSERT_ASCINEMA_HERE>
+You can press `h` to bring up a help view, `n` to step forwards, and `p` to step back. If you press
+`e` in symbolic test you will jump to the next branching point, once there you can press `0` to choose
+the branch which does not jump, and `1` to choose the branch that does.
+
+Note that the interactive debugger will also function when executing against mainnet state.
+
+A small demonstation video can be found below:
+
+
+
 
 ## Limitations, Assumptions & Future Work
 
