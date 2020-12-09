@@ -131,8 +131,8 @@ to a given function.
 
 ## Using `ds-test`
 
-[`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is a solidity unit testing
-library for `dapp`, which uses `hevm` for execution. `hevm` will execute as a test any method that meets the
+[`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the solidity interface
+to `hevm`'s unit testing funcionality. `hevm` will execute as a test any method that meets the
 following criteria:
 
 1. The method is on a contract that inherits from `DSTest`
@@ -180,8 +180,14 @@ contract Test is DSTest {
 - `test_associativity_fuzz` will be executed many times (100 by default), with randomly generated values for `x`, `y`, and `z`.
 - `prove_associativity` will be symbolically executed, with `x`, `y`, and `z` represented as symbolic variables.
 
-Finally, it is possible to manipulate the execution environment (e.g. timestamp) from within
-`ds-test` using by using hevm "[cheat codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)"
+Each one of these test types has an additional `fail` variant, which will pass when at least one of the assertions within the test is violated. This is indicated by prefixing the test name with `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
+
+Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
+caller) from within `ds-test` using by using hevm
+"[cheat codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)",
+or the `DAPP_TEST_*` [environment variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
+
+For an overview of the available assertions and logging events, the [source code](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the best reference.
 
 ## Finding Counterexamples
 
