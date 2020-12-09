@@ -80,7 +80,7 @@ line options.
 
 Symbolic execution is a program analysis technique that keeps some of the program state in an
 abstract form, meaning that instead of being set to a specific value, these portions of the state
-are represented as a name with some constraints attached.
+are represented by a variable with some constraints attached.
 
 To make this more specific, consider the contract below:
 
