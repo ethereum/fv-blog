@@ -316,7 +316,61 @@ function prove_transfer(address dst, uint amt) public {
     assertEq(sub(preBalThis, delta), token.balanceOf(address(this)));
 
     // balance of dst has been increased by `delta`
-    assertEq(sub(token.balanceOf(dst), preBalDst), delta);
+    assertEq(add(preBalDst, delta), token.balanceOf(dst));
+}
+```
+
+## Narrowing The Range of Test Inputs
+
+It will often be the case that the system under test is expected to revert in some situations. In
+these situations it can be desirable to limit the range of the test inputs so these cases are not
+triggered.
+
+As an example, consider a test for the `add` function from the introduction:
+
+```solidity
+library Add {
+    function add(uint x, uint y) internal pure returns (uint z) {
+        require((z = x + y) >= x, "overflow!");
+    }
+}
+
+contract TestAdd is DSTest {
+    function prove_add(uint x, uint y) public {
+        assertEq(Add.add(x, y), x + y);
+    }
+}
+```
+
+Running this test gives us the obvious counter example:
+
+```
+Running 1 tests for src/Test.sol:TestAdd
+[FAIL] prove_add(uint256,uint256)
+
+Failure: prove_add(uint256,uint256)
+
+  Counter Example:
+
+    result:   Revert("overflow!")
+    calldata: prove_add(1, 115792089237316195423570985008687907853269984665640564039457584007913129639935)
+```
+
+We can rewrite the test with an early return to skip the assertion violation in this branch of the
+execution tree. If we wish to keep our specification exhaustive over the inputs, we can add a
+`proveFail` test with an inverted condition that will always fail in the branches where overflow
+does not occur:
+
+```solidity
+contract TestAdd is DSTest {
+    function prove_add(uint x, uint y) public {
+        iff(x + y < x, "overflow");
+        assertEq(Add.add(x, y), x + y);
+    }
+    function proveFail_add(uint x, uint y) public {
+        require(x + y < x, "must overflow");
+        assertEq(Add.add(x, y), x + y);
+    }
 }
 ```
 
