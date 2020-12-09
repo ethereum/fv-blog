@@ -225,19 +225,23 @@ We can write a test that asserts our expected behaviour for the transfer functio
 
 ```solidity
 contract TestToken is DSTest, SafeMath {
-    function prove_transfer(address dst, uint amt) public {
-        Token token = new Token(uint(-1));
+    Token token;
+    function setUp() public {
+        token = new Token(uint(-1));
+        log_named_address("this", address(this));
+    }
 
+    function prove_transfer(address dst, uint amt) public {
         uint preBalThis = token.balanceOf(address(this));
         uint preBalDst  = token.balanceOf(dst);
 
         token.transfer(dst, amt);
 
         // balance of this has been reduced by `amt`
-        assertEq(sub(preBalThis, token.balanceOf(address(this))), amt);
+        assertEq(sub(preBalThis, amt), token.balanceOf(address(this)));
 
         // balance of dst has been increased by `amt`
-        assertEq(sub(token.balanceOf(dst), preBalDst), amt);
+        assertEq(add(preBalDst, amt), token.balanceOf(dst));
     }
 }
 ```
@@ -300,8 +304,6 @@ A test for `transfer` that takes self-transfers into account could look like thi
 
 ```solidity
 function prove_transfer(address dst, uint amt) public {
-    log_named_address("this", address(this));
-
     uint preBalThis = token.balanceOf(address(this));
     uint preBalDst  = token.balanceOf(dst);
 
@@ -311,7 +313,7 @@ function prove_transfer(address dst, uint amt) public {
     uint delta = dst == address(this) ? 0 : amt;
 
     // balance of this has been reduced by `delta`
-    assertEq(sub(preBalThis, token.balanceOf(address(this))), delta);
+    assertEq(sub(preBalThis, delta), token.balanceOf(address(this)));
 
     // balance of dst has been increased by `delta`
     assertEq(sub(token.balanceOf(dst), preBalDst), delta);
