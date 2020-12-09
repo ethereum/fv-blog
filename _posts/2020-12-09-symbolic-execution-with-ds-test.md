@@ -70,7 +70,11 @@ curl -L https://nixos.org/nix/install | sh
 curl https://dapp.tools/install | sh
 ```
 
-All the examples from this blog post are available [here](https://github.com/xwvvvvwx/ds-test-blog-examples).
+You can start a new `dapp` project by running `dapp init` inside of an empty directory, this will
+install `ds-test` as a submodule, and prepare the expected folder layout. A skeleton test file will
+have been created at `src/<PROJECT_NAME>.t.sol`. You can run `dapp test` from the root of the
+project to execute the unit tests, and `dapp help test` to get an overview of the available command
+line options.
 
 ## What Is Symbolic Execution?
 
