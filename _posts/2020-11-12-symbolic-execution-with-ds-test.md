@@ -38,14 +38,18 @@ contracts.
 **Table of Contents**
 
 - [Installation](#installation)
-- [Example Code](#example-code)
 - [What Is Symbolic Execution?](#what-is-symbolic-execution)
 - [Using `ds-test`](#using-ds-test)
 - [Finding Counterexamples](#finding-counterexamples)
+- [Narrowing The Range of Test Inputs](#narrowing-the-range-of-test-inputs)
 - [Execution Environment And Limits to Proof](#execution-environment-and-limits-to-proof)
 - [Execution Against Mainnet State](#execution-against-mainnet-state)
 - [Interactive Exploration](#interactive-exploration)
 - [Limitations, Assumptions & Future Work](#limitations-assumptions--future-work)
+    - [Non Linearity (`safeMul`)](#non-linearity-safemul)
+    - [Symbolic Representation of Dynamic Types](#symbolic-representation-of-dynamic-types)
+    - [Symbolic Constructor Arguments](#symbolic-constructor-arguments)
+    - [State Explosion](#state-explosion)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
