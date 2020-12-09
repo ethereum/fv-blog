@@ -11,7 +11,10 @@ The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.
 [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) incorporates the recently
 introduced symbolic execution features into its unit testing framework.
 
-This lets smart contract developers formulate and prove properties in Solidity using the  [`dapp`](https://github.com/dapphub/dapptools/tree/master/src/dapp) development framework. Formally verifying properties should now be no harder than writing a property based test. In fact, it uses almost the exact same syntax!
+This lets smart contract developers formulate and prove properties in Solidity using the
+[`dapp`](https://github.com/dapphub/dapptools/tree/master/src/dapp) development framework. Formally
+verifying properties should now be no harder than writing a property based test. In fact, it uses
+almost the exact same syntax!
 
 As an example, the following is a proof of the [distributive
 property](https://en.wikipedia.org/wiki/Distributive_property) for evm addition and multiplication:
