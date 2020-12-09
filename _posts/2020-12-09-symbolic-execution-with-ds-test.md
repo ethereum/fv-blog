@@ -390,7 +390,7 @@ the input variables*. As an example, consider the `prove_transfer` test from the
 
 ```solidity
 function transfer(address dst, uint amt) public {
-    require(totalSupply > uint56(-1), "whoops");
+    require(totalSupply == uint256(-1), "whoops");
     balanceOf[msg.sender] = sub(balanceOf[msg.sender], amt);
     balanceOf[dst]        = add(balanceOf[dst], amt);
 }
