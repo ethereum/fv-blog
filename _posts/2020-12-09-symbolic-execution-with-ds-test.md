@@ -17,7 +17,7 @@ verifying properties should now be no harder than writing a property based test.
 almost the exact same syntax!
 
 As an example, the following is a proof of the [distributive
-property](https://en.wikipedia.org/wiki/Distributive_property) for evm addition and multiplication:
+property](https://en.wikipedia.org/wiki/Distributive_property) for EVM addition and multiplication:
 
 ```solidity
 function prove_distributivity(uint x, uint y, uint z) public {
@@ -46,7 +46,7 @@ contracts.
 - [Execution Against Mainnet State](#execution-against-mainnet-state)
 - [Interactive Exploration](#interactive-exploration)
 - [Limitations, Assumptions & Future Work](#limitations-assumptions--future-work)
-    - [Non Linearity (`safeMul`)](#non-linearity-safemul)
+    - [Non-Linearity (`safeMul`)](#non-linearity-safemul)
     - [Symbolic Representation of Dynamic Types](#symbolic-representation-of-dynamic-types)
     - [Symbolic Constructor Arguments](#symbolic-constructor-arguments)
     - [State Explosion](#state-explosion)
@@ -98,10 +98,10 @@ proceed through the program, we will encounter various potential branching point
 `JUMPI` instruction). If both sides of the branching point are reachable (determined by checking if
 the conjunction of all existing constraints and the branching condition is satisfiable), then
 execution will split in two, and each branch will be explored seperately, with the branching
-condition (or it's negation depending on which branch is being explored) being added as a constraint
+condition (or its negation depending on which branch is being explored) being added as a constraint
 for that particular branch.
 
-This results in a tree of possible executions, for example for the `add` method, the execution tree
+This results in a tree of possible executions. For the `add` method, for example, the execution tree
 looks like this (ignoring potential failures due to out of gas errors):
 
 ```
@@ -183,7 +183,7 @@ contract Test is DSTest {
 Each one of these test types has an additional `fail` variant, which will pass when at least one of the assertions within the test is violated. This is indicated by prefixing the test name with `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
 
 Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
-caller) from within `ds-test` using by using hevm
+caller) from within `ds-test` by using hevm
 "[cheat codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)",
 or the `DAPP_TEST_*` [environment variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
 
@@ -227,7 +227,7 @@ We can write a test that asserts our expected behaviour for the transfer functio
 contract TestToken is DSTest, SafeMath {
     Token token;
     function setUp() public {
-        token = new Token(uint(-1));
+        token = new Token(type(uint).max);
         log_named_address("this", address(this));
     }
 
@@ -289,7 +289,7 @@ Failure: prove_transfer(address,uint256)
 Looking into the output, we can see that this represents the case where `dst` is the same as the
 sender (in this case the test contract).
 
-In this case the counter example found doesn't represent a bug in the implementation of `transfer`,
+In this case the counterexample found doesn't represent a bug in the implementation of `transfer`,
 but rather shows that our understanding of the expected behaviour was flawed: an exhaustive
 description of the behaviour of `transfer` must take self transfers into account. This kind of
 situation is common when applying formal methods, where we are forced to consider all possible edge
@@ -298,7 +298,7 @@ cases.
 It is also worth noting that fuzzing would be very unlikely to catch this edge case: there are 2^20
 possible addresses, and the chance that a randomly generated address would match the address of the
 test contract is miniscule. You can try it out yourself by renaming the `prove_transfer` method to
-`test_transfer` and seeing if a counter example is found.
+`test_transfer` and seeing if a counterexample is found.
 
 A test for `transfer` that takes self-transfers into account could look like this:
 
@@ -342,7 +342,7 @@ contract TestAdd is DSTest {
 }
 ```
 
-Running this test gives us the obvious counter example:
+Running this test gives us the obvious counterexample:
 
 ```
 Running 1 tests for src/Test.sol:TestAdd
@@ -380,17 +380,17 @@ In order to understand the limits of the proofs that it is possible to produce u
 an understanding of the environment in which they are run is essential:
 
 - All variables in the environment (e.g. caller, gas, timestamp) remain concrete
-- All storage slots are initialized with concrete values (by default to zero if rpc state is not used)
+- All storage slots are initialized with concrete values (by default to zero if RPC state is not used)
 
 In fact, the only symbolic variables introduced into the test environment are those that are
 specified in the signature of the test method. This means that the proofs are exhaustive *only over
 the input variables*. As an example, consider the `prove_transfer` test from the example above. The
-`totalSupply` is always `uint(-1)`, and the test would not catch obviously faulty implementations of
+`totalSupply` is always `type(uint).max`, and the test would not catch obviously faulty implementations of
 `transfer` like the one below:
 
 ```solidity
 function transfer(address dst, uint amt) public {
-    require(totalSupply == uint256(-1), "whoops");
+    require(totalSupply == type(uint).max, "whoops");
     balanceOf[msg.sender] = sub(balanceOf[msg.sender], amt);
     balanceOf[dst]        = add(balanceOf[dst], amt);
 }
@@ -398,8 +398,8 @@ function transfer(address dst, uint amt) public {
 
 ## Execution Against Mainnet State
 
-`hevm` allows us to fetch state from an rpc node, and we can also use this to write symbolic tests
-against mainnet state. As an example, lets run `prove_transfer` against the [balancer
+`hevm` allows us to fetch state from an RPC node, and we can also use this to write symbolic tests
+against mainnet state. As an example, let's run `prove_transfer` against the [balancer
 token](https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#code):
 
 ```solidity
@@ -413,7 +413,7 @@ contract TestBal is DSTest, SafeMath {
         // BAL: https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#code
         ERC20 token = ERC20(0xba100000625a3754423978a60c9317c58a424e3D);
 
-        // ignore cases where we don't have engough tokens
+        // ignore cases where we don't have enough tokens
         if (amt > bal.balanceOf(address(this))) return;
 
         uint preBalThis = token.balanceOf(address(this));
@@ -433,7 +433,9 @@ contract TestBal is DSTest, SafeMath {
 }
 ```
 
-Lets run this test as the [balancer DAO](https://etherscan.io/token/0xba100000625a3754423978a60c9317c58a424e3d?a=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533) to make sure that we have plenty of `BAL`:
+Let's run this test as the [balancer
+DAO](https://etherscan.io/token/0xba100000625a3754423978a60c9317c58a424e3d?a=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533)
+to make sure that we have plenty of `BAL`:
 
 ```
 $ DAPP_TEST_ADDRESS=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533 dapp test --rpc-url <URL>
@@ -449,9 +451,6 @@ Failure: prove_transfer(address,uint256)
 
 We have uncovered another edge case! The balancer token disallows transfers to the zero address.
 
-It is also worth noting that symbolic execution against rpc state can be significantly more
-performant than fuzzing via rpc.
-
 ## Interactive Exploration
 
 `hevm` also includes a visual debugger, and we can use this to interactively explore the execution
@@ -460,7 +459,7 @@ will see a list of test methods, and once you select one you will be dropped int
 debugging session.
 
 You can press `h` to bring up a help view, `n` to step forwards, and `p` to step back. If you press
-`e` in symbolic test you will jump to the next branching point, once there you can press `0` to choose
+`e` in symbolic test you will jump to the next branching point. Once there you can press `0` to choose
 the branch which does not jump, and `1` to choose the branch that does.
 
 Note that the interactive debugger will also function when executing against mainnet state.
@@ -472,15 +471,16 @@ A small demonstation video can be found below:
 
 ## Limitations, Assumptions & Future Work
 
-#### Non Linearity (`safeMul`)
+#### Non-Linearity (`safeMul`)
 
 The symbolic execution engine in `hevm` is backed by an [SMT
 solver](https://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories) (currently either `z3` or
-`cvc4` are supported). Expressions involving non-linear arithmetic (multiplication or divison by
-symbolic variables) are extremely challenging for SMT solvers, and it will often not be possible to
-symbolically execute tests involving lots of non linear arithmetic.
+`cvc4` are supported). Expressions involving non-linear arithmetic (multiplication, divison or
+exponentiation by symbolic variables) are extremely challenging or impossible for SMT solvers, and
+it will often not be practical to symbolically execute tests involving lots of non-linear
+arithmetic.
 
-Unfortunately, non linear arithmetic is quite common in real world contracts (e.g.
+Unfortunately, non-linear arithmetic is quite common in real world contracts (e.g.
 [`safeMul`](https://github.com/dapphub/ds-math/blob/master/src/math.sol#L25) can easily
 involve both a multiplication and a division by a symbolic variable).
 
@@ -498,7 +498,7 @@ We intend to lift this restriction in a future release of `hevm`.
 #### Symbolic Constructor Arguments
 
 Contract bytecode is currently assumed by `hevm` to be completely concrete. As constructor arguments
-are implemented on the evm level by appending data to the contract's `creationCode`, symbolic
+are implemented on the EVM level by appending data to the contract's `creationCode`, symbolic
 execution of contract constructors where the arguments are set to symbolic values will currently
 fail with an `UnexpectedSymbolicArg` error.
 
@@ -507,7 +507,7 @@ We intend to lift this restriction in a future release of `hevm`.
 #### State Explosion
 
 Symbolic execution explores all possible paths through a program. If the program is large, or
-contains many branches, this can become computationly very intensive. This issue is known as "state
+contains many branches, this can become computationally very intensive. This issue is known as "state
 explosion". While the relative simplicity of most smart contracts limits the impact, you should be
 aware that exploration of very large or complex contract systems may become very time consuming.
 
