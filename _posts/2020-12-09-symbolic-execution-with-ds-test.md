@@ -380,7 +380,7 @@ In order to understand the limits of the proofs that it is possible to produce u
 an understanding of the environment in which they are run is essential:
 
 - All variables in the environment (e.g. caller, gas, timestamp) remain concrete
-- All storage slots are set to zero at the beginning of the tests (meanings tests are effectively run against an empty blockchain)
+- All storage slots are initialized with concrete values (by default to zero if rpc state is not used)
 
 In fact, the only symbolic variables introduced into the test environment are those that are
 specified in the signature of the test method. This means that the proofs are exhaustive *only over
