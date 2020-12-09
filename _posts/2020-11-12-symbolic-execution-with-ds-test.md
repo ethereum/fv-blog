@@ -1,8 +1,8 @@
 ---
 layout: post
 published: true
-title: Symbolic Execution With `ds-test`
-date: '2020-11-12'
+title: Symbolic Execution With ds-test
+date: '2020-12-09'
 author: David Terry
 category: 'Research & Development'
 ---
