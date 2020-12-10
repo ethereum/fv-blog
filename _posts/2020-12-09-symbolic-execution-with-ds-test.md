@@ -130,7 +130,7 @@ to a given function.
 
 ## Using `ds-test`
 
-[`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the solidity interface
+[`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the Solidity interface
 to `hevm`'s unit testing functionality. `hevm` will execute as a test any method that meets the
 following criteria:
 
