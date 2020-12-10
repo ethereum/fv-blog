@@ -224,7 +224,7 @@ contract Token is SafeMath {
     uint256 public totalSupply;
     mapping (address => uint) public balanceOf;
 
-    constructor(uint _totalSupply) {
+    constructor(uint _totalSupply) public {
         totalSupply           = _totalSupply;
         balanceOf[msg.sender] = _totalSupply;
     }
