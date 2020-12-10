@@ -179,14 +179,19 @@ contract Test is DSTest {
 - `test_associativity_fuzz` will be executed many times (100 by default), with randomly generated values for `x`, `y`, and `z` for each run.
 - `prove_associativity` will be symbolically executed, with `x`, `y`, and `z` represented as symbolic variables.
 
-Each one of these test types has an additional `fail` variant, which will pass when at least one of the assertions within the test is violated. This is indicated by prefixing the test name with `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
+Each one of these test types has an additional `fail` variant, which will pass when at least one of
+the assertions within the test is violated. This is indicated by prefixing the test name with
+`testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must
+be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
 
 Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
-caller, or even arbitrary storage slots) from within `ds-test` by using hevm
-"[cheat codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)",
-or the `DAPP_TEST_*` [environment variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
+caller, or even arbitrary storage slots) from within `ds-test` by using hevm "[cheat
+codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)", or the `DAPP_TEST_*`
+[environment
+variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
 
-For an overview of the available assertions and logging events, the [source code](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the best reference.
+For an overview of the available assertions and logging events, the [source
+code](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the best reference.
 
 ## Finding Counterexamples
 
