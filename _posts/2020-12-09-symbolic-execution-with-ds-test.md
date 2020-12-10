@@ -92,14 +92,12 @@ contract Add {
 }
 ```
 
-When executing the `add` method symbolically we represent the calldata as two abstract variables
-(`x` and `y`) that are constrained so their value can only fit in the range of a `uint256`. As we
-proceed through the program, we will encounter various potential branching points (for example a
-`JUMPI` instruction). If both sides of the branching point are reachable (determined by checking if
-the conjunction of all existing constraints and the branching condition is satisfiable), then
-execution will split in two, and each branch will be explored seperately, with the branching
-condition (or its negation depending on which branch is being explored) being added as a constraint
-for that particular branch.
+When executing the `add` method symbolically, calldata is represented as two abstract words,`x` and `y`, without further constraints. As we
+proceed through the program we will encounter potential branching points, such as a
+`JUMPI` instruction. At this point, we check which branches are reachable by checking if
+the conjunction of all existing constraints and the branching condition is satisfiable. If both are reachable, then
+execution will split in two, and each branch will be explored separately, with the branching
+condition being added as a constraint for that particular branch.
 
 This results in a tree of possible executions. For the `add` method, for example, the execution tree
 looks like this (ignoring potential failures due to out of gas errors):
@@ -177,13 +175,13 @@ contract Test is DSTest {
 ```
 
 - `test_associativity` will run a single test case with the concrete values of `1`, `2`, and `3`.
-- `test_associativity_fuzz` will be executed many times (100 by default), with randomly generated values for `x`, `y`, and `z`.
+- `test_associativity_fuzz` will be executed many times (100 by default), with randomly generated values for `x`, `y`, and `z` for each run.
 - `prove_associativity` will be symbolically executed, with `x`, `y`, and `z` represented as symbolic variables.
 
 Each one of these test types has an additional `fail` variant, which will pass when at least one of the assertions within the test is violated. This is indicated by prefixing the test name with `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
 
 Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
-caller) from within `ds-test` by using hevm
+caller, or even arbitrary storage slots) from within `ds-test` by using hevm
 "[cheat codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)",
 or the `DAPP_TEST_*` [environment variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
 
