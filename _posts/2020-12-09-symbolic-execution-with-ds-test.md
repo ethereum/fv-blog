@@ -228,7 +228,7 @@ contract Token is SafeMath {
 We can write a test that asserts our expected behaviour for the transfer function as follows:
 
 ```solidity
-contract TestToken is DSTest, SafeMath {
+contract TestToken is SafeMath, DSTest {
     Token token;
     function setUp() public {
         token = new Token(type(uint).max);
@@ -407,7 +407,7 @@ interface ERC20 {
     function transfer(address recipient, uint256 amount) external returns (bool);
 }
 
-contract TestBal is DSTest, SafeMath {
+contract TestBal is SafeMath, DSTest {
     function setUp() public {}
 
     function prove_transfer(address dst, uint amt) public {
