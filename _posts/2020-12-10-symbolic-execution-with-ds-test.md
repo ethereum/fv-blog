@@ -48,6 +48,8 @@ contracts.
 - [Interactive Exploration](#interactive-exploration)
 - [Limitations, Assumptions & Future Work](#limitations-assumptions--future-work)
     - [Non-Linearity (`safeMul`)](#non-linearity-safemul)
+    - [Loops](#loops)
+    - [External Calls to Unknown Code](#external-calls-to-unknown-code)
     - [Symbolic Representation of Dynamic Types](#symbolic-representation-of-dynamic-types)
     - [Symbolic Constructor Arguments](#symbolic-constructor-arguments)
     - [State Explosion](#state-explosion)
@@ -499,7 +501,7 @@ involve both a multiplication and a division by a symbolic variable).
 We hope to include optimizations in future releases of `hevm` that reduce the load on the solver
 when executing contracts that make use of common non-linearities (`safeMul` included).
 
-### Loops
+#### Loops
 
 Loops post a significant challenge for symbolic execution. Loops with dynamic bounds will simply
 loop forever, and even if the bounds are static, each iteration of the loop introduces a new branch.
@@ -511,7 +513,7 @@ times any branching point may be revisited.
 
 This approach is known in the literature as "Bounded Model Checking".
 
-### External Calls to Unknown Code
+#### External Calls to Unknown Code
 
 `hevm` currently does not support symbolic execution of calls into unknown code. For example the
 code below will fail with a `NotUnique` error (meaning that `hevm` is unable to determine a unique
