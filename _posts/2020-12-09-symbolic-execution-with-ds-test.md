@@ -131,7 +131,7 @@ to a given function.
 ## Using `ds-test`
 
 [`ds-test`](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the solidity interface
-to `hevm`'s unit testing funcionality. `hevm` will execute as a test any method that meets the
+to `hevm`'s unit testing functionality. `hevm` will execute as a test any method that meets the
 following criteria:
 
 1. The method is on a contract that inherits from `DSTest`
@@ -146,7 +146,7 @@ Three types of test are recognised by `hevm`:
 |----------------|---------|-----------|-------------------------------------------------------------|
 | concrete       | `test`  | no        | single execution with concrete values                       |
 | property based | `test`  | yes       | multiple executions with randomly generated concrete values |
-| symbolic       | `prove` | optional  | exhaustive exploration of all possible exeuction paths      |
+| symbolic       | `prove` | optional  | exhaustive exploration of all possible execution paths      |
 
 To illustrate the differences between the test types, consider the following example:
 
@@ -182,7 +182,7 @@ contract Test is DSTest {
 Each one of these test types has an additional `fail` variant, which will pass when at least one of
 the assertions within the test is violated. This is indicated by prefixing the test name with
 `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must
-be an assertion violation in every leaf on the exectuion tree for the `proveFail` test to pass.
+be an assertion violation in every leaf on the execution tree for the `proveFail` test to pass.
 
 Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
 caller, or even arbitrary storage slots) from within `ds-test` by using hevm "[cheat
@@ -296,7 +296,7 @@ cases.
 
 It is also worth noting that fuzzing would be very unlikely to catch this edge case: there are 2^20
 possible addresses, and the chance that a randomly generated address would match the address of the
-test contract is miniscule. You can try it out yourself by renaming the `prove_transfer` method to
+test contract is minuscule. You can try it out yourself by renaming the `prove_transfer` method to
 `test_transfer` and seeing if a counterexample is found.
 
 A test for `transfer` that takes self-transfers into account could look like this:
@@ -414,7 +414,7 @@ contract TestBal is DSTest, SafeMath {
         // BAL: https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#code
         ERC20 bal = ERC20(0xba100000625a3754423978a60c9317c58a424e3D);
 
-        // ignore cases where we don't have engough tokens
+        // ignore cases where we don't have enough tokens
         if (amt > bal.balanceOf(address(this))) return;
 
         uint preBalThis = bal.balanceOf(address(this));
@@ -465,7 +465,7 @@ the branch which does not jump, and `1` to choose the branch that does.
 
 Note that the interactive debugger will also function when executing against mainnet state.
 
-A small demonstation video can be found below:
+A small demonstration video can be found below:
 
 
 
@@ -476,7 +476,7 @@ A small demonstation video can be found below:
 
 The symbolic execution engine in `hevm` is backed by an [SMT
 solver](https://en.wikipedia.org/wiki/Satisfiability_Modulo_Theories) (currently either `z3` or
-`cvc4` are supported). Expressions involving non-linear arithmetic (multiplication, divison or
+`cvc4` are supported). Expressions involving non-linear arithmetic (multiplication, division or
 exponentiation by symbolic variables) are extremely challenging or impossible for SMT solvers, and
 it will often not be practical to symbolically execute tests involving lots of non-linear
 arithmetic.
