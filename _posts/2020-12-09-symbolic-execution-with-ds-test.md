@@ -467,8 +467,7 @@ Note that the interactive debugger will also function when executing against mai
 
 A small demonstration video can be found below:
 
-
-
+[![asciicast](https://asciinema.org/a/z1gg559jjOFnmfwI8A5LxTM0T.svg)](https://asciinema.org/a/z1gg559jjOFnmfwI8A5LxTM0T)
 
 ## Limitations, Assumptions & Future Work
 
