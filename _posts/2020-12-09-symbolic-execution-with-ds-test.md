@@ -92,12 +92,13 @@ contract Add {
 }
 ```
 
-When executing the `add` method symbolically, calldata is represented as two abstract words,`x` and `y`, without further constraints. As we
-proceed through the program we will encounter potential branching points, such as a
-`JUMPI` instruction. At this point, we check which branches are reachable by checking if
-the conjunction of all existing constraints and the branching condition is satisfiable. If both are reachable, then
-execution will split in two, and each branch will be explored separately, with the branching
-condition being added as a constraint for that particular branch.
+When executing the `add` method symbolically, calldata is represented as two abstract words,`x` and
+`y`, without further constraints. As we proceed through the program we will encounter potential
+branching points, such as a `JUMPI` instruction. At this point, we check which branches are
+reachable by checking if the conjunction of all existing constraints and the branching condition is
+satisfiable. If both are reachable, then execution will split in two, and each branch will be
+explored separately, with the branching condition being added as a constraint for that particular
+branch.
 
 This results in a tree of possible executions. For the `add` method, for example, the execution tree
 looks like this (ignoring potential failures due to out of gas errors):
