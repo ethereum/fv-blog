@@ -211,8 +211,6 @@ then make a few calls into that contract, before running your test cases against
 Let's look at a more complex example! Consider the following token contract:
 
 ```solidity
-pragma solidity ^0.6.12;
-
 contract SafeMath {
     function add(uint x, uint y) internal pure returns (uint z) {
         require((z = x + y) >= x, "overflow");
@@ -226,7 +224,7 @@ contract Token is SafeMath {
     uint256 public totalSupply;
     mapping (address => uint) public balanceOf;
 
-    constructor(uint _totalSupply) public {
+    constructor(uint _totalSupply) {
         totalSupply           = _totalSupply;
         balanceOf[msg.sender] = _totalSupply;
     }
@@ -248,7 +246,7 @@ contract TestToken is SafeMath, DSTest {
         log_named_address("this", address(this));
     }
 
-    function prove_transfer1(address dst, uint amt) public {
+    function prove_transfer(address dst, uint amt) public {
         uint preBalThis = token.balanceOf(address(this));
         uint preBalDst  = token.balanceOf(dst);
 
@@ -270,17 +268,17 @@ If we run this test with `dapp test -v`, it fails with the following output:
 
 Failure: prove_transfer(address,uint256)
 
-  Counter Example:
+  Counterexample:
 
     result:   Revert("overflow")
-    calldata: prove_transfer(0x3bE95e4159a131E56A84657c4ad4D43eC7Cd865d, 240291199546112762523540484339339822112703198940676617395593663860030046208)
+    calldata: prove_transfer(0x3bE95e4159a131E56A84657c4ad4D43eC7Cd865d, 29439701909273478501181875661097080170793294512827181564594992945753195806720)
 
     src/Test.sol:TestToken
      ├╴constructor
      ├╴setUp()
      │  ├╴create Token@0xDB356e865AAaFa1e37764121EA9e801Af13eEb83 (src/Test.sol:69)
      │  │  └╴← 896 bytes of code
-     │  └╴log_named_address(«this», 0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Test.sol:70)
+     │  └╴log_named_address("this", 0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Test.sol:70)
      └╴prove_transfer(address,uint256)
         ├╴call Token::balanceOf(address)(0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Test.sol:74)
         │  └╴← (uint256)
@@ -290,9 +288,9 @@ Failure: prove_transfer(address,uint256)
         │  └╴← (0x)
         ├╴call Token::balanceOf(address)(address) (src/Test.sol:80)
         │  └╴← (uint256)
-        ├╴log_bytes32(bytes32) (lib/ds-test/src/test.sol:108)
-        ├╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:109)
-        ├╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:110)
+        ├╴log(string) (lib/ds-test/src/test.sol:124)
+        ├╴log_named_uint(string, uint256) (lib/ds-test/src/test.sol:125)
+        ├╴log_named_uint(string, uint256) (lib/ds-test/src/test.sol:126)
         └╴call Token::balanceOf(address)(address) (src/Test.sol:83)
            └╴← (uint256)
 ```
@@ -356,12 +354,11 @@ contract TestAdd is DSTest {
 Running this test gives us the obvious counterexample:
 
 ```
-Running 1 tests for src/Test.sol:TestAdd
 [FAIL] prove_add(uint256,uint256)
 
 Failure: prove_add(uint256,uint256)
 
-  Counter Example:
+  Counterexample:
 
     result:   Revert("overflow!")
     calldata: prove_add(1, 115792089237316195423570985008687907853269984665640564039457584007913129639935)
@@ -456,14 +453,14 @@ $ DAPP_TEST_ADDRESS=0xb618f903ad1d00d6f7b92f5b0954dcdc056fc533 dapp test --rpc-u
 
 Failure: prove_transfer(address,uint256)
 
-  Counter Example:
+  Counterexample:
 
     result:   Revert("ERC20: transfer to the zero address")
     calldata: prove_transfer(0x0000000000000000000000000000000000000000, 0)
 ```
 
 We have uncovered another edge case! The balancer token disallows transfers to the zero address. If
-you are interested in learning about more ERC20 edge cases an extensive list is maintained at
+you are interested in learning about more ERC20 edge cases, an extensive list is maintained at
 [weird-er20](https://github.com/xwvvvvwx/weird-erc20).
 
 ## Interactive Exploration
