@@ -371,8 +371,8 @@ contract TestAdd is DSTest {
 
 ## Execution Environment And Limits to Proof
 
-In order to understand the limits of the proofs that it is possible to produce using this framework,
-an understanding of the environment in which they are run is essential:
+In order to understand the limits of the proofs that can be produced with this framework, an
+understanding of the environment in which they are run is essential:
 
 - All variables in the environment (e.g. caller, gas, timestamp) remain concrete
 - All storage slots are initialized with concrete values (by default to zero if RPC state is not used)
