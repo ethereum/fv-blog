@@ -231,17 +231,17 @@ contract TestToken is DSTest, SafeMath {
         log_named_address("this", address(this));
     }
 
-    function prove_transfer(address dst, uint amt) public {
+    function prove_transfer1(address dst, uint amt) public {
         uint preBalThis = token.balanceOf(address(this));
         uint preBalDst  = token.balanceOf(dst);
 
         token.transfer(dst, amt);
 
-        // balance of this has been reduced by `amt`
-        assertEq(sub(preBalThis, amt), token.balanceOf(address(this)));
+        // balance of `this` has been reduced by `amt`
+        assertEq(token.balanceOf(address(this)), sub(preBalThis, amt));
 
-        // balance of dst has been increased by `amt`
-        assertEq(add(preBalDst, amt), token.balanceOf(dst));
+        // balance of `dst` has been increased by `amt`
+        assertEq(token.balanceOf(dst), add(preBalDst, amt));
     }
 }
 ```
@@ -249,41 +249,36 @@ contract TestToken is DSTest, SafeMath {
 Interestingly, if we run this test with `dapp test -v`, it fails with the following output:
 
 ```
-Running 1 tests for src/Solidity.t.sol:TestERC20
+Running 1 tests for src/Test.sol:TestToken
 [FAIL] prove_transfer(address,uint256)
 
 Failure: prove_transfer(address,uint256)
 
   Counter Example:
 
-    result:   Return: 32 symbolic bytes
-    calldata: prove_transfer(0x3bE95e4159a131E56A84657c4ad4D43eC7Cd865d, 76659960446604539291960111962233748565076778433776366035354251883061838872576)
+    result:   Revert("overflow")
+    calldata: prove_transfer(0x3bE95e4159a131E56A84657c4ad4D43eC7Cd865d, 240291199546112762523540484339339822112703198940676617395593663860030046208)
 
-    src/Solidity.t.sol:TestToken
+    src/Test.sol:TestToken
      ├╴constructor
      ├╴setUp()
-     │  └╴create ERC20@0xDB356e865AAaFa1e37764121EA9e801Af13eEb83 (src/Solidity.t.sol:89)
-     │     ├╴Transfer(115792089237316195423570985008687907853269984665640564039457584007913129639935) (src/Solidity.t.sol:54)
-     │     └╴← 2672 bytes of code
+     │  ├╴create Token@0xDB356e865AAaFa1e37764121EA9e801Af13eEb83 (src/Test.sol:69)
+     │  │  └╴← 896 bytes of code
+     │  └╴log_named_address(«this», 0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Test.sol:70)
      └╴prove_transfer(address,uint256)
-        ├╴log_named_address(«this», 0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Solidity.t.sol:93)
-        ├╴call ERC20::balanceOf(address)(0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Solidity.t.sol:95)
+        ├╴call Token::balanceOf(address)(0x3be95e4159a131e56a84657c4ad4d43ec7cd865d) (src/Test.sol:74)
         │  └╴← (uint256)
-        ├╴call ERC20::balanceOf(address)(address) (src/Solidity.t.sol:96)
+        ├╴call Token::balanceOf(address)(address) (src/Test.sol:75)
         │  └╴← (uint256)
-        ├╴call ERC20::transfer(address,uint256)(address, uint256) (src/Solidity.t.sol:98)
-        │  ├╴Transfer(uint256) (src/Solidity.t.sol:67)
-        │  └╴← (bool)
-        ├╴call ERC20::balanceOf(address)(address) (src/Solidity.t.sol:101)
+        ├╴call Token::transfer(address,uint256)(address, uint256) (src/Test.sol:77)
+        │  └╴← (0x)
+        ├╴call Token::balanceOf(address)(address) (src/Test.sol:80)
         │  └╴← (uint256)
         ├╴log_bytes32(bytes32) (lib/ds-test/src/test.sol:108)
         ├╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:109)
         ├╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:110)
-        ├╴call ERC20::balanceOf(address)(address) (src/Solidity.t.sol:104)
-        │  └╴← (uint256)
-        ├╴log_bytes32(bytes32) (lib/ds-test/src/test.sol:108)
-        ├╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:109)
-        └╴log_named_uint(bytes32, uint256) (lib/ds-test/src/test.sol:110)
+        └╴call Token::balanceOf(address)(address) (src/Test.sol:83)
+           └╴← (uint256)
 ```
 
 Looking into the output, we can see that this represents the case where `dst` is the same as the
@@ -291,7 +286,7 @@ sender (in this case the test contract).
 
 In this case the counterexample found doesn't represent a bug in the implementation of `transfer`,
 but rather shows that our understanding of the expected behaviour was flawed: an exhaustive
-description of the behaviour of `transfer` must take self transfers into account. This kind of
+description of the behaviour of `transfer` must take self-transfers into account. This kind of
 situation is common when applying formal methods, where we are forced to consider all possible edge
 cases.
 
@@ -312,11 +307,11 @@ function prove_transfer(address dst, uint amt) public {
     // no change for self-transfer
     uint delta = dst == address(this) ? 0 : amt;
 
-    // balance of this has been reduced by `delta`
-    assertEq(sub(preBalThis, delta), token.balanceOf(address(this)));
+    // balance of `this` has been reduced by `delta`
+    assertEq(token.balanceOf(address(this)), sub(preBalThis, delta));
 
-    // balance of dst has been increased by `delta`
-    assertEq(add(preBalDst, delta), token.balanceOf(dst));
+    // balance of `dst` has been increased by `delta`
+    assertEq(token.balanceOf(dst), add(preBalDst, delta));
 }
 ```
 
@@ -364,7 +359,7 @@ does not occur:
 ```solidity
 contract TestAdd is DSTest {
     function prove_add(uint x, uint y) public {
-        iff(x + y < x, "overflow");
+        if (x + y < x) return; // no overflow
         assertEq(Add.add(x, y), x + y);
     }
     function proveFail_add(uint x, uint y) public {
@@ -409,17 +404,19 @@ interface ERC20 {
 }
 
 contract TestBal is DSTest, SafeMath {
+    function setUp() public {}
+
     function prove_transfer(address dst, uint amt) public {
         // BAL: https://etherscan.io/address/0xba100000625a3754423978a60c9317c58a424e3D#code
-        ERC20 token = ERC20(0xba100000625a3754423978a60c9317c58a424e3D);
+        ERC20 bal = ERC20(0xba100000625a3754423978a60c9317c58a424e3D);
 
-        // ignore cases where we don't have enough tokens
+        // ignore cases where we don't have engough tokens
         if (amt > bal.balanceOf(address(this))) return;
 
-        uint preBalThis = token.balanceOf(address(this));
-        uint preBalDst  = token.balanceOf(dst);
+        uint preBalThis = bal.balanceOf(address(this));
+        uint preBalDst  = bal.balanceOf(dst);
 
-        token.transfer(dst, amt);
+        bal.transfer(dst, amt);
 
         // no change for self-transfer
         uint delta = dst == address(this) ? 0 : amt;
@@ -428,7 +425,7 @@ contract TestBal is DSTest, SafeMath {
         assertEq(sub(preBalThis, delta), bal.balanceOf(address(this)));
 
         // balance of `dst` has been increased by `delta`
-        assertEq(add(preBalDst, delta), bal.balanceOf(dst);
+        assertEq(add(preBalDst, delta), bal.balanceOf(dst));
     }
 }
 ```
