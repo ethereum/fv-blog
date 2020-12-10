@@ -450,7 +450,9 @@ Failure: prove_transfer(address,uint256)
     calldata: prove_transfer(0x0000000000000000000000000000000000000000, 0)
 ```
 
-We have uncovered another edge case! The balancer token disallows transfers to the zero address.
+We have uncovered another edge case! The balancer token disallows transfers to the zero address. If
+you are interested in learning about more ERC20 edge cases an extensive list is maintained at
+[weird-er20](https://github.com/xwvvvvwx/weird-erc20).
 
 ## Interactive Exploration
 
