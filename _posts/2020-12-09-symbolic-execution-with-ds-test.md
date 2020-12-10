@@ -40,6 +40,7 @@ contracts.
 - [Installation](#installation)
 - [What Is Symbolic Execution?](#what-is-symbolic-execution)
 - [Using `ds-test`](#using-ds-test)
+- [Setting Up the Environment](#setting-up-the-environment)
 - [Finding Counterexamples](#finding-counterexamples)
 - [Narrowing The Range of Test Inputs](#narrowing-the-range-of-test-inputs)
 - [Execution Environment And Limits to Proof](#execution-environment-and-limits-to-proof)
@@ -184,14 +185,24 @@ the assertions within the test is violated. This is indicated by prefixing the t
 `testFail` or `proveFail` (e.g. `testFail_associativity`). In the case of symbolic tests, there must
 be an assertion violation in every leaf on the execution tree for the `proveFail` test to pass.
 
-Finally, it is possible to manipulate the execution environment (e.g. timestamp, block number,
-caller, or even arbitrary storage slots) from within `ds-test` by using hevm "[cheat
-codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)", or the `DAPP_TEST_*`
-[environment
-variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
-
 For an overview of the available assertions and logging events, the [source
 code](https://github.com/dapphub/ds-test/blob/master/src/test.sol) is the best reference.
+
+## Setting Up the Environment
+
+There are a few ways in which the test environment can be prepared:
+
+1. Constructing and configuring contracts in the `setUp` phase
+1. Pulling state from an ethereum node via rpc ([more details](#execution-against-mainnet-state)).
+1. Tweaking the environment (e.g. caller, timestamp, block number, or even arbitrary storage slots)
+   from within `ds-test` by using hevm "[cheat
+   codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)", or the
+   `DAPP_TEST_*` [environment
+   variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
+
+Note that all of these methods can be combined in arbitrary ways, e.g. you can pull a contract's
+state from mainnet, modify it's storage to make yourself the owner, jump forwards 100 blocks, and
+then make a few calls into that contract, before running your test cases against the new state.
 
 ## Finding Counterexamples
 
