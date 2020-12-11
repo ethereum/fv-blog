@@ -10,3 +10,6 @@ ehthumbs.db
 
 # bundler
 vendor
+
+# jekyll
+.jekyll-cache/
