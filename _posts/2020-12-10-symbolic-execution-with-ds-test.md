@@ -504,7 +504,7 @@ Loops can pose a significant challenge for symbolic execution. As an example con
 code:
 
 ```solidity
-function prove_loop(uint n) public {
+function prove_loop(uint n) public pure {
     uint counter;
     for (uint i = 0; i <= n; i++) {
         counter = i;
@@ -523,7 +523,9 @@ upper limit on the number of times any branching point may be revisited. This ap
 the literature as "Bounded Model Checking".
 
 Fully general proofs involving dynamically bounded looping behaviour can be achieved by defining
-loop invariants or utilizing coinduction. These proof styles are not supported by `ds-test`.
+loop invariants or utilizing coinduction. These proof styles are not supported by `ds-test`, but are
+available in other tools  (e.g. the chc backend of solc's
+[SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification)).
 
 #### External Calls to Unknown Code
 
@@ -537,9 +539,11 @@ function prove_call(address target) public {
 }
 ```
 
-Proof strategies for calls to unknown code do exist, and are supported by the SMTChecker built into
-the solidity compiler. The SMTChecker can even synthesize an example call target that would trigger
-an assertion violation in the calling contract (for example via reentrancy).
+As above, proof strategies for calls to unknown code do exist, and are supported by the chc engine
+of solc's
+[SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification).
+The SMTChecker can even synthesize an example call target that would trigger an assertion violation
+in the calling contract (for example via reentrancy).
 
 #### Symbolic Representation of Dynamic Types
 
