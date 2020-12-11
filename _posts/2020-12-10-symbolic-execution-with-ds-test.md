@@ -523,7 +523,7 @@ upper limit on the number of times any branching point may be revisited. This ap
 the literature as "Bounded Model Checking".
 
 Strategies for exhaustive proofs involving dynamically bounded looping behaviour do exist, but are
-not supported by `ds-test`. They are however available in other tools, for example in the chc engine
+not supported by `ds-test`. They are however available in other tools (for example in the chc engine
 of solc's
 [SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification)).
 
