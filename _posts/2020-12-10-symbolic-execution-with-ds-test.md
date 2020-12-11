@@ -197,8 +197,8 @@ There are a few ways in which the test environment can be prepared:
 1. Constructing and configuring contracts in the `setUp` phase
 1. Pulling state from an ethereum node via rpc ([more details](#execution-against-mainnet-state)).
 1. Tweaking the environment (e.g. caller, timestamp, block number, or even arbitrary storage slots)
-   from within `ds-test` by using hevm "[cheat
-   codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes)", or the
+   from within `ds-test` by using hevm [cheat
+   codes](https://github.com/dapphub/dapptools/tree/master/src/hevm#cheat-codes), or the
    `DAPP_TEST_*` [environment
    variables](https://github.com/dapphub/dapptools/tree/master/src/hevm#environment-variables).
 
@@ -498,17 +498,32 @@ involve both a multiplication and a division by a symbolic variable).
 We hope to include optimizations in future releases of `hevm` that reduce the load on the solver
 when executing contracts that make use of common non-linearities (`safeMul` included).
 
-#### Loops
+#### Loops & Max Iterations
 
-Loops post a significant challenge for symbolic execution. Loops with dynamic bounds will simply
-loop forever, and even if the bounds are static, each iteration of the loop introduces a new branch.
-This can quickly become impractical, and in these cases it may be helpful to restrict the maximum
-number of iterations that will be executed for a given loop.
+Loops can pose a significant challenge for symbolic execution. As an example consider the following
+code:
 
-This can be controlled via the `--max-iterations` flag, which places an upper limit on the number of
-times any branching point may be revisited.
+```solidity
+function prove_loop(uint n) public {
+    uint counter;
+    for (uint i = 0; i <= n; i++) {
+        counter = i;
+    }
+    assertEq(counter, n);
+}
+```
 
-This approach is known in the literature as "Bounded Model Checking".
+Execution will branch each time it reaches the loop condition (one branch where `i == n`, and one
+where the loop continues). This means that there are a total of 2^256 branches on the execution tree
+for this method! This is simply impossible to execute on any existing hardware.
+
+In cases like this, it may be helpful to restrict the maximum number of iterations that will be
+executed for a given loop. This can be controlled via the `--max-iterations` flag, which places an
+upper limit on the number of times any branching point may be revisited. This approach is known in
+the literature as "Bounded Model Checking".
+
+Fully general proofs involving dynamically bounded looping behaviour can be achieved by defining
+loop invariants or utilizing coinduction. These proof styles are not supported by `ds-test`.
 
 #### External Calls to Unknown Code
 
