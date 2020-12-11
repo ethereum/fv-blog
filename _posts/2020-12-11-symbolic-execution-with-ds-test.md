@@ -7,7 +7,7 @@ author: David Terry
 category: 'Research & Development'
 ---
 
-The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.43.0) of
+The [latest release](https://github.com/dapphub/dapptools/releases/tag/hevm%2F0.43.2) of
 [`hevm`](https://github.com/dapphub/dapptools/tree/master/src/hevm) incorporates the recently
 introduced symbolic execution features into its unit testing framework.
 
