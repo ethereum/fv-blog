@@ -2,7 +2,7 @@
 layout: post
 published: true
 title: Symbolic Execution With ds-test
-date: '2020-12-10'
+date: '2020-12-11'
 author: David Terry
 category: 'Research & Development'
 ---
@@ -542,8 +542,6 @@ function prove_call(address target) public {
 As above, proof strategies for calls to unknown code do exist, and are supported by the chc engine
 of solc's
 [SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification).
-The SMTChecker can even synthesize an example call target that would trigger an assertion violation
-in the calling contract (for example via reentrancy).
 
 #### Symbolic Representation of Dynamic Types
 
