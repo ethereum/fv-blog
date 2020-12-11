@@ -537,6 +537,10 @@ function prove_call(address target) public {
 }
 ```
 
+Proof strategies for calls to unknown code do exist, and are supported by the SMTChecker built into
+the solidity compiler. The SMTChecker can even synthesize an example call target that would trigger
+an assertion violation in the calling contract (for example via reentrancy).
+
 #### Symbolic Representation of Dynamic Types
 
 `hevm` is currently unable to represent dynamic types (e.g. `bytes`, `string`) symbolically. Tests
