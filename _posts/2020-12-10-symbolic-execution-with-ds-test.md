@@ -522,9 +522,10 @@ executed for a given loop. This can be controlled via the `--max-iterations` fla
 upper limit on the number of times any branching point may be revisited. This approach is known in
 the literature as "Bounded Model Checking".
 
-Fully general proofs involving dynamically bounded looping behaviour can be achieved by defining
-loop invariants or utilizing coinduction. These proof styles are not supported by `ds-test`, but are
-available in other tools  (e.g. the chc backend of solc's
+Strategies for exhaustive proofs involving dynamically bounded looping behaviour do exist, but are
+not supported by `ds-test`. They are however available in other tools, for example in the [chc
+engine](http://verify.inf.usi.ch/sites/default/files/Accurate%20Smart%20Contract%20Verification%20through%20Direct%20Modelling-%20Extended%20Version.pdf)
+of solc's
 [SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification)).
 
 #### External Calls to Unknown Code
@@ -539,7 +540,8 @@ function prove_call(address target) public {
 }
 ```
 
-As above, proof strategies for calls to unknown code do exist, and are supported by the chc engine
+As above, proof strategies for calls to unknown code do exist, and are supported by the [chc
+engine](http://verify.inf.usi.ch/sites/default/files/Accurate%20Smart%20Contract%20Verification%20through%20Direct%20Modelling-%20Extended%20Version.pdf)
 of solc's
 [SMTChecker](https://docs.soliditylang.org/en/v0.7.5/security-considerations.html#formal-verification).
 The SMTChecker can even synthesize an example call target that would trigger an assertion violation
