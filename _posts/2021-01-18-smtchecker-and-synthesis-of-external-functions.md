@@ -56,7 +56,7 @@ contract Test {
 
 The function takes an array of length at least 6, and computes the maximum
 element of the array.  After that, it asserts that the previously found max
-element `m` is greater than all the elements of the array`, which is what the
+element `m` is greater than all the elements of the array, which is what the
 SMTChecker will try to prove.  The property is almost true:
 
 ```sh
@@ -420,3 +420,10 @@ decreasing false positives, and improving solving performance.
 
 In the upcoming weeks I also intend to release a series of posts detailing the
 internals of the CHC engine, which I find exciting and I hope you will too!
+
+## Acknowledgments
+
+We thank Martin Blicha and Antti Hyvärinen from Università della Svizzera
+italiana for their contributions to the SMTChecker's CHC engine's theory and
+code, as part of our ongoing research collaboration on formal verification of
+smart contracts.
