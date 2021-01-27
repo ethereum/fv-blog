@@ -341,8 +341,7 @@ contract ERC777 {
 	mapping (address => uint256) public balanceOf;
 	uint public totalSupply;
 
-	function deposit(uint _amount) public payable {
-		require(_amount == msg.value);
+	function deposit() public payable {
 		require(msg.value > 0);
 		balanceOf[msg.sender] += msg.value;
 		totalSupply += msg.value;
@@ -380,22 +379,22 @@ When trying to prove the property, we learn that:
 ```sh
 Warning: CHC: Assertion violation happens here.
 Counterexample:
-totalSupply = 2
-_to = 8944
-_amount = 2
+totalSupply = 975
+_to = 1461501637330902918203684832716283019655932537122
+_amount = 1
 
 Transaction trace:
 ERC777.constructor()
 State: totalSupply = 0
-ERC777.deposit(591)
-State: totalSupply = 591
-ERC777.transfer(8944, 2)
+ERC777.deposit(){ value: 974 }
+State: totalSupply = 974
+ERC777.transfer(1461501637330902918203684832716283019655932537122, 1)
     IERC777Sender(msg.sender).tokensToSend(msg.sender, _to, _amount) -- untrusted external call, synthesized as:
-        ERC777.withdraw(589) -- reentrant call
+        ERC777.deposit(){ value: 1 } -- reentrant call
     IERC777Recipient(_to).tokensReceived(msg.sender, _to, _amount) -- untrusted external call
-  --> erc777.sol:51:3:
+  --> erc777.sol:50:3:
    |
-51 | 		assert(totalSupply == preSupply);
+50 | 		assert(totalSupply == preSupply);
    | 		^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 ```
 
@@ -423,7 +422,7 @@ internals of the CHC engine, which I find exciting and I hope you will too!
 
 ## Acknowledgments
 
-We thank Martin Blicha and Antti Hyvärinen from Università della Svizzera
-italiana for their contributions to the SMTChecker's CHC engine's theory and
-code, as part of our ongoing research collaboration on formal verification of
-smart contracts.
+We thank Martin Blicha and Antti Hyvärinen from the Formal Verification and
+Security Lab at Università della Svizzera italiana for their contributions to
+the SMTChecker's CHC engine's theory and code, as part of our ongoing research
+collaboration on formal verification of smart contracts.
