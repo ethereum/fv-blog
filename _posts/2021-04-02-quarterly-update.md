@@ -29,13 +29,20 @@ calls to untrusted code.
 hevm
 ===
 
-We have improved `hevm`'s documentation and added many optimizations regarding
-how the SMT queries are stored and the encoding of wrapped arithmetic.
+We have optimized `hevm` for working with safe arithmetic on the bytecode
+level by using the techniques from [this paper](http://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/z3prefix.pdf).
 
-We are currently working on a static binary for `hevm` which might ease some
-dependency issues and improve usability. We also intend to add RPC support,
-dynamic types, and synchronize loop invariants and calls to untrusted code with
-Act.
+Two new hevm cheat codes useful for fuzz testing functionality involving ecrecover
+have been added; `sign` and `addr`. Cheat codes can now also be called with symbolic
+arguments, making them available for use in formal verification.
+
+Through further generalizations, `hevm` now admits symbolic constructor arguments
+as well.
+
+We have improved documentation to make `hevm` more accessible, and are now
+working on a static binary for `hevm` which might ease some dependency issues
+and improve usability. We also intend to add RPC support, support for symbolic dynamic types,
+and synchronize loop invariants and calls to untrusted code with Act.
 
 
 SMTChecker
