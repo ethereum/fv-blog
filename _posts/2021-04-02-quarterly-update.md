@@ -43,6 +43,7 @@ We have improved documentation to make `hevm` more accessible, and are now
 working on a static binary for `hevm` which might ease some dependency issues
 and improve usability. We also intend to add RPC support, support for symbolic dynamic types,
 and synchronize loop invariants and calls to untrusted code with Act.
+But first, we need to implement Berlin into the hevm codebase.
 
 
 SMTChecker
