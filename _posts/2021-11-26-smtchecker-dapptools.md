@@ -27,7 +27,7 @@ This means that if your development framework uses `soljson.js` or the OSX binar
 binary and you have z3 installed, the SMTChecker should be available.
 
 The old but still supported way to enable the tool is by using `pragma experimental SMTChecker;`
-in your source code, be we are deprecating that in favor of the JSON field `settings.modelChecker`
+in your source code, but we are deprecating that in favor of the JSON field `settings.modelChecker`
 and the `--model-checker-*` CLI options.
 Solidity 0.9.0 will not accept the `pragma` anymore, only the JSON and CLI options.
 
@@ -156,3 +156,6 @@ It is possible, however, to use different solvers and any desired configuration.
 In the next blog post I will show how to do that, and present some experiments
 demonstrating how important it is to try different things when dealing with
 hard properties.
+
+As usual, you are welcome to [ask questions about the tool's internals](https://matrix.to/#/#ethereum_solidity-dev:gitter.im),
+[how to use it best](https://matrix.to/#/#ethereum_solidity-dev:gitter.im), and [open bug reports](https://github.com/ethereum/solidity/issues/).
