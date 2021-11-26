@@ -43,6 +43,10 @@ The warning on line 15 comes from the SMTChecker:
 
 ![remix_cex](https://fv.ethereum.org/img/2021/11/remix_cex.png)
 
+Note that the compilation time may increase considerably if you enable the SMTChecker,
+since the SMT solver will run in the background,
+trying to solve potentially several queries.
+
 ### Dapptools
 
 [Dapptools](https://github.com/dapphub/dapptools/) has a tight integration with [hevm](https://fv.ethereum.org/2020/07/28/symbolic-hevm-release/)
@@ -61,6 +65,7 @@ $ dapp mk-standard-json &> smt.json
 ```
 
 and then modify it manually to add the object
+
 ```json
 "modelChecker": {
 	"engine": "chc",
@@ -90,6 +95,18 @@ Then use this new contract as the target in the `settings.modelChecker.contracts
 
 ![dapptools_code](https://fv.ethereum.org/img/2021/11/dapptools_code.png)
 
+New object in the input JSON file:
+
+```json
+"modelChecker": {
+	"engine": "chc",
+	"contracts": {
+		"src/BinaryMachine.t.sol": [ "BinaryMachineProperties" ]
+	},
+	"targets": [ "assert" ]
+}
+```
+
 By combining the properties contract, which can also be seen as specification, and DSTest, one can use both the
 SMTChecker and hevm in the same setup.
 
@@ -101,7 +118,7 @@ hevm fuzzer run:
 
 ![dapptools_hevm](https://fv.ethereum.org/img/2021/11/dapptools_hevm.png)
 
-Notice that `CHC` is the recommended engine, and you are advised to always set the single contract you
+Note that `CHC` is the recommended engine, and you are advised to always set the single contract you
 want to be verified, as this helps the solver a lot. It may also be useful to set which verification
 targets you would like to be verified, as well as a custom timeout if the solver is failing at your
 properties.
