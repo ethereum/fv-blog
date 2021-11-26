@@ -38,6 +38,9 @@ It does not yet let you tweak the `settings.modelChecker` JSON field, but you ca
 use the `pragma` version.
 
 ![remix_code](https://fv.ethereum.org/img/2021/11/remix_code.png)
+
+The warning on line 15 comes from the SMTChecker:
+
 ![remix_cex](https://fv.ethereum.org/img/2021/11/remix_cex.png)
 
 ### Dapptools
@@ -88,9 +91,14 @@ Then use this new contract as the target in the `settings.modelChecker.contracts
 ![dapptools_code](https://fv.ethereum.org/img/2021/11/dapptools_code.png)
 
 By combining the properties contract, which can also be seen as specification, and DSTest, one can use both the
-SMTChecker and hevm in the same setup:
+SMTChecker and hevm in the same setup.
+
+SMTChecker analysis run:
 
 ![dapptools_smtchecker](https://fv.ethereum.org/img/2021/11/dapptools_smtchecker.png)
+
+hevm fuzzer run:
+
 ![dapptools_hevm](https://fv.ethereum.org/img/2021/11/dapptools_hevm.png)
 
 Notice that `CHC` is the recommended engine, and you are advised to always set the single contract you
