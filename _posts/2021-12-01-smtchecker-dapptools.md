@@ -37,11 +37,11 @@ Solidity 0.9.0 will not accept the `pragma` anymore, only the JSON and CLI optio
 It does not yet let you tweak the `settings.modelChecker` JSON field, but you can still
 use the `pragma` version.
 
-![remix_code](https://fv.ethereum.org/img/2021/11/remix_code.png)
+![remix_code](https://fv.ethereum.org/img/2021/12/remix_code.png)
 
 The warning on line 15 comes from the SMTChecker:
 
-![remix_cex](https://fv.ethereum.org/img/2021/11/remix_cex.png)
+![remix_cex](https://fv.ethereum.org/img/2021/12/remix_cex.png)
 
 Note that the compilation time may increase considerably if you enable the SMTChecker,
 since the SMT solver will run in the background,
@@ -102,7 +102,7 @@ The SMTChecker does not handle Dapptools' DSTest well, so it is recommended that
 with properties (assertions) you want to verify, and make that contract inherit from your main contract instead of calling it externally.
 Then use this new contract as the target in the `settings.modelChecker.contracts` object above.
 
-![dapptools_code](https://fv.ethereum.org/img/2021/11/dapptools_code.png)
+![dapptools_code](https://fv.ethereum.org/img/2021/12/dapptools_code.png)
 
 New object in the input JSON file:
 
@@ -121,11 +121,11 @@ SMTChecker and hevm in the same setup.
 
 SMTChecker analysis run:
 
-![dapptools_smtchecker](https://fv.ethereum.org/img/2021/11/dapptools_smtchecker.png)
+![dapptools_smtchecker](https://fv.ethereum.org/img/2021/12/dapptools_smtchecker.png)
 
 hevm fuzzer run:
 
-![dapptools_hevm](https://fv.ethereum.org/img/2021/11/dapptools_hevm.png)
+![dapptools_hevm](https://fv.ethereum.org/img/2021/12/dapptools_hevm.png)
 
 Both tools show that our property is actually wrong, and give us a
 counterexample that breaks the assertion.
