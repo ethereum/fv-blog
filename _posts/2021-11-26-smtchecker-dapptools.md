@@ -1,6 +1,6 @@
 ---
 layout: post
-published: false
+published: true
 title: SMTChecker, Remix & Dapptools
 date: '2021-11-26'
 author: Leo Alt
@@ -82,6 +82,15 @@ Or use a one liner to do the same:
 $ dapp mk-standard-json | jq '.settings += {"modelChecker": {"engine": "chc", "contracts": {"src/MyContract.sol": ["MyContract"]}, "targets": ["assert"]}}' &> smt.json
 ```
 
+In the next release of Dapptools, this will become even easier:
+```bash
+DAPP_SMTCHECKER=1 dapp mk-standard-json
+```
+
+If the environment variable `DAPP_SMTCHECKER` is set to `1`, `dapp mk-standard-json` already outputs the desired
+input JSON file with standard values for the `settings.modelChecker` object.
+You can simply modify them directly to change the model checker options.
+
 Since the SMTChecker runs at Solidity's compile time, now all you have to do is tell Dapptools to use that
 input JSON file and re-compile:
 
@@ -117,6 +126,206 @@ SMTChecker analysis run:
 hevm fuzzer run:
 
 ![dapptools_hevm](https://fv.ethereum.org/img/2021/11/dapptools_hevm.png)
+
+Both tools show that our property is actually wrong, and give us a
+counterexample that breaks the assertion.
+Let's fix the assertion and change the property function to:
+
+```solidity
+function propertyOne() public view {
+	assert(x <= 2);
+}
+```
+
+Now we don't get a warning about the assertion anymore, which means that
+the solver managed to prove that the assertion is always true.
+
+If we use Solidity 0.8.10 or greater, we can now ask the SMTChecker to
+give us any contract inductive invariants that the solver may have found:
+
+```json
+"modelChecker": {
+	"engine": "chc",
+	"contracts": {
+		"src/BinaryMachine.t.sol": [ "BinaryMachineProperties" ]
+	},
+	"targets": [ "assert" ],
+	"invariants": [ "contract" ]
+}
+```
+
+Here we tell Dapptools to use a `solc` different from its default (I downloaded the latest release):
+
+```bash
+DAPP_SOLC=./solc-static-linux DAPP_STANDARD_JSON=smt.json dapp build
+```
+
+Now we get:
+
+```solidity
+Info: Contract invariant(s) for src/BinaryMachine.t.sol:BinaryMachineProperties:
+!(x >= 2)
+```
+
+So the solver tells us not only that our assertion is true, but that there is
+also a stronger property that is true: `x < 2`, instead of our `x <= 2`.
+This property is automatically inferred by the Horn solver, together with
+many other useful properties such as reentrancy properties and loop invariants.
+
+---
+
+Now let's check a small but a bit more complex example:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.8.6;
+
+interface Unknown {
+	function callMe() external;
+}
+
+contract ExtCall {
+	uint x;
+
+	function setX(uint y) public {
+		x = y;
+	}
+
+	function xMut(Unknown u) public {
+		uint x_prev = x;
+		u.callMe();
+		// Can `x` change?
+		assert(x_prev == x);
+	}
+}
+```
+
+We built the JSON input:
+
+```bash
+$ dapp mk-standard-json | jq '.settings += {"modelChecker": {"engine": "chc", "contracts": {"src/ExtCall.sol": ["ExtCall"]}, "targets": ["assert"]}}' &> smt.json
+```
+
+Since we are using `smt.json` just for the SMTChecker we can remove the `ExtCall.t.sol` source and the selected outputs, so that we get:
+
+```json
+{
+  "language": "Solidity",
+  "sources": {
+    "src/ExtCall.sol": {
+      "urls": [
+        "src/ExtCall.sol"
+      ]
+    }
+  },
+  "settings": {
+    "modelChecker": {
+      "engine": "chc",
+      "contracts": {
+        "src/ExtCall.sol": [
+          "ExtCall"
+        ]
+      },
+      "targets": [
+        "assert"
+      ]
+    }
+  }
+}
+```
+
+Running
+```bash
+DAPP_SOLC=./solc-static-linux DAPP_STANDARD_JSON=smt.json dapp build
+```
+
+we get
+
+```solidity
+Warning: CHC: Assertion violation happens here.
+Counterexample:
+x = 1
+u = 0
+x_prev = 0
+
+Transaction trace:
+ExtCall.constructor()
+State: x = 0
+ExtCall.xMut(0)
+    u.callme() -- untrusted external call, synthesized as:
+        ExtCall.setX(1) -- reentrant call
+  --> src/ExtCall.sol:18:3:
+   |
+18 | 		assert(x_prev == x);
+   | 		^^^^^^^^^^^^^^^^^^^
+```
+
+Now the counterexample tells us that `x` can actually change during an unsafe external call.
+Furthermore, the solver synthesizes a reentrant call, performed by the externally called contract,
+that eventually causes the assertion to fail.
+
+One way to solve this is by applying a `mutex` modifier to both `setX` and `xMut`:
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.8.6;
+
+interface Unknown {
+	function callme() external;
+}
+
+contract ExtCall {
+	uint x;
+
+	bool lock;
+	modifier mutex {
+		require(!lock);
+		lock = true;
+		_;
+		lock = false;
+	}
+
+	function setX(uint y) mutex public {
+		x = y;
+	}
+
+	function xMut(Unknown u) mutex public {
+		uint x_prev = x;
+		u.callme();
+		assert(x_prev == x);
+	}
+}
+```
+
+Now the SMTChecker issues no warnings for the assertion, so it was proven safe.
+Similarly to the previous example, we can also ask for a proof artifact here,
+that being properties that are true for every unsafe external call in the contract.
+That can be done with Solidity >=0.8.10 by requesting `reentrancy` invariants in
+the `settings.modelChecker` object:
+
+```json
+"invariants": [ "contract" ]
+```
+
+The property we get is:
+
+```solidity
+Info: Reentrancy property(ies) for src/ExtCall.sol:ExtCall:
+((lock' || !lock) && (<errorCode> <= 0) && (!lock || ((x' + ((- 1) * x)) = 0)))
+<errorCode> = 0 -> no errors
+<errorCode> = 1 -> Assertion failed at assert(x_prev == x)
+```
+
+The property may look a little complex, but it is rather simple.
+Primed state variables (`x'`) represent the state variable after the external
+call returns, and non-primed state variables (`x`) represent its value before
+the call is made.
+The last term of the given conjunction is the most meaningful part of this property.
+After a small simplification, we see that it states that `lock -> x' = x`, that is,
+if the mutex variable `lock` is true at the moment of the external call,
+`x` must be the same when the call returns.
+
+---
 
 Note that `CHC` is the recommended engine, and you are advised to always set the single contract you
 want to be verified, as this helps the solver a lot. It may also be useful to set which verification
