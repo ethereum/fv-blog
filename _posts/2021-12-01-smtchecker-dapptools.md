@@ -2,7 +2,7 @@
 layout: post
 published: true
 title: SMTChecker, Remix & Dapptools
-date: '2021-11-26'
+date: '2021-12-01'
 author: Leo Alt
 category: 'Research & Development'
 ---
